@@ -1,6 +1,7 @@
 unit frame_channel_level;
 
-{$mode ObjFPC}{$H+}
+{$mode ObjFPC}
+{$H+}
 
 interface
 

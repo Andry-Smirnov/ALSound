@@ -50,7 +50,8 @@
 }
 unit libsndfile;
 
-{$mode objfpc}{$H+}
+{$mode ObjFPC}
+{$H+}
 {$ModeSwitch AdvancedRecords}
 {$PACKRECORDS C}
 

@@ -1,6 +1,7 @@
 unit Unit1;
 
-{$mode objfpc}{$H+}
+{$mode ObjFPC}
+{$H+}
 
 interface
 

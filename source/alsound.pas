@@ -21,7 +21,8 @@
 
 unit ALSound;
 
-{$mode objfpc}{$H+}
+{$mode ObjFPC}
+{$H+}
 {$MODESWITCH ADVANCEDRECORDS}
 {$pointerMath on}
 

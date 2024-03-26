@@ -24,7 +24,8 @@
 
 unit openalsoft;
 
-{$mode objfpc}{$H+}
+{$mode ObjFPC}
+{$H+}
 {$PACKRECORDS C}
 {$MODESWITCH ADVANCEDRECORDS}
 

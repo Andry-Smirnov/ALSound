@@ -22,7 +22,8 @@
 
 unit als_dsp_utils;
 
-{$mode objfpc}{$H+}
+{$mode ObjFPC}
+{$H+}
 
 interface
 
