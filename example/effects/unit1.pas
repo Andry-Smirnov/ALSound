@@ -7,7 +7,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, ComCtrls, Spin, Buttons,
+  ExtCtrls,
+  ComCtrls, Spin, Buttons,
   ALSound;
 
 type
