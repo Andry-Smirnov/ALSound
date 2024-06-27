@@ -1362,9 +1362,12 @@ var
   // or to retrieve some usefull informations.
   ALSManager: TALSManager;
 
+
 implementation
 
+
 uses Math;
+
 
 var
 {$ifndef ALS_ENABLE_CONTEXT_SWITCHING}
@@ -1372,6 +1375,7 @@ var
 {$else}
   _CSLockContext: TRTLCriticalSection;
 {$endif}
+
 
 procedure LockContext( aContext: PALCcontext );
 begin
