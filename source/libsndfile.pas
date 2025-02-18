@@ -1050,7 +1050,7 @@ begin
   if _LibSndFile_ReferenceCounter > 0 then
     Dec(_LibSndFile_ReferenceCounter);
   if _LibSndFile_ReferenceCounter > 0 then
-    exit;
+    Exit;
 
   if _LibSndFile_Handle <> dynlibs.NilHandle then
   begin
@@ -1114,7 +1114,7 @@ function TALSFileMetaData.WriteMetaDataTo(aSNDFile: PSNDFILE): Boolean;
 var res: Boolean;
   procedure WriteStrMeta(aStrType: cint; const aValue: string);
   begin
-    if aValue = '' then exit;
+    if aValue = '' then Exit;
     {$ifdef windows}
       res := res and (sf_set_string(aSNDFile, aStrType, PChar(UTF8ToWinCP(aValue))) = 0);
     {$else}
@@ -1123,7 +1123,7 @@ var res: Boolean;
   end;
 begin
   Result := False;
-  if aSNDFile = NIL then exit;
+  if aSNDFile = NIL then Exit;
 
   res := True;
   WriteStrMeta(SF_STR_TITLE, PChar(Title));
@@ -1150,7 +1150,7 @@ procedure TALSFileMetaData.ReadMetaDataFrom(aSNDFile: PSNDFILE);
   end;
 begin
   InitDefault;
-  if aSNDFile = NIL then exit;
+  if aSNDFile = NIL then Exit;
 
   Title := ReadStrMeta(SF_STR_TITLE);
   Copyright := ReadStrMeta(SF_STR_COPYRIGHT);

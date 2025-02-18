@@ -131,7 +131,7 @@ begin
   // User have selected a format in the listbox
   i := ListBox1.ItemIndex;
   if i = -1 then
-    exit;
+    Exit;
 
   // Ask for the 'catalog' of supported audio file format and their sub-format
   // and keep the major format and its file extension for a later use
@@ -154,7 +154,7 @@ var
 begin
   // checks if user have choosen all parameters
   if not ( CaptureContextIsReady and FileParametersAreReady )then
-    exit;
+    Exit;
 
   // Asks to our capture context to save audio data to the specified file.
   // UserFile is a function that construct the path + filename + file extension
@@ -194,7 +194,8 @@ begin
   // If any show the capture message error
   if FCaptureContext.CaptureError then
     ShowMessage(UserFile+LINEENDING+FCaptureContext.StrCaptureError)
-  else // or play the captured audio
+  else
+    // or play the captured audio
     Form2.Play( UserFile );
 end;
 
@@ -279,7 +280,7 @@ begin
   // Checks if user have choosen all parameters for the selection of capture device
   if (ComboBox1.ItemIndex = -1) or (ComboBox2.ItemIndex = -1) or
     (ComboBox3.ItemIndex = -1) or (ComboBox4.ItemIndex = -1) then
-    exit;
+    Exit;
 
   // Destroy the previous capture context
   if FCaptureContext <> nil then

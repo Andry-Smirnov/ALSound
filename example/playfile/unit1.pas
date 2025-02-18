@@ -131,7 +131,7 @@ procedure TForm1.BLoadClick(Sender: TObject);
 var
   s: string;
 begin
-  if not OD1.Execute then exit;
+  if not OD1.Execute then Exit;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 

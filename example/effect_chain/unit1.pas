@@ -166,7 +166,7 @@ var
   s: string;
 begin
   // User selects a sound filename to load
-  if not OD1.Execute then exit;
+  if not OD1.Execute then Exit;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 

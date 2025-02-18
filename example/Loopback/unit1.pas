@@ -117,9 +117,9 @@ var
   i: Integer;
 begin
   if FPlaybackContext <> NIL then
-    exit;
+    Exit;
 
-  if not OpenDialog1.Execute then exit;
+  if not OpenDialog1.Execute then Exit;
 
   i := TBitBtn(Sender).Tag;
 
@@ -219,7 +219,7 @@ var
   i: Integer;
 begin
   if FPlaybackContext = NIL then
-    exit;
+    Exit;
 
   FreeAndNil(FPlaybackContext);
 
@@ -240,7 +240,7 @@ begin
   // Some check.
   if (Edit1.Text = '') or
      (DirectoryEdit1.Text = '') then
-    exit;
+    Exit;
 
   // Creates a loopback context and checks error.
   FLoopbackContext := ALSManager.CreateDefaultLoopbackContext;
@@ -248,7 +248,7 @@ begin
   begin
     ShowMessage(FLoopbackContext.StrError);
     FreeAndNil(FLoopbackContext);
-    exit;
+    Exit;
   end;
 
   // Checks if the mixing format is supported.
@@ -257,7 +257,7 @@ begin
     ShowMessage('Current mixing format not supported'+lineending+
                 'Please, try different setting');
     FreeAndNil(FLoopbackContext);
-    exit;
+    Exit;
   end;
 
 

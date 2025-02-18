@@ -106,7 +106,7 @@ end;
 procedure TForm1.SpeedButton4Click(Sender: TObject);
 var i: Integer;
 begin
-  if not OpenDialog1.Execute then exit;
+  if not OpenDialog1.Execute then Exit;
   for i := 0 to OpenDialog1.Files.Count - 1 do begin
     FPlaybackContext.Playlist.Add(OpenDialog1.Files.Strings[i]);
     ListBox1.Items.Add(ExtractFileName(OpenDialog1.Files.Strings[i]));
@@ -136,7 +136,7 @@ begin
   if FPlaybackContext.Error then
   begin
     Label3.Caption := FPlaybackContext.StrError;
-    exit;
+    Exit;
   end;
 
   case FPlaybackContext.Playlist.State of

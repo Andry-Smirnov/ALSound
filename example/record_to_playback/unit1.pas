@@ -226,7 +226,7 @@ procedure TForm1.BStartClick(Sender: TObject);
 begin
   // checks if user have choosen all parameters
   if not CaptureContextIsReady then
-    exit;
+    Exit;
 
   // Asks to our capture context to play the captured audio in real time.
   FSound := FCaptureContext.PrepareToPlayback( FPlaybackContext );
@@ -491,7 +491,7 @@ var
 begin
   // User have selected a capture device.
   if ComboBox1.ItemIndex = -1 then
-    exit;
+    Exit;
 
   // Destroy the previous capture context.
   if FCaptureContext <> nil then
@@ -568,7 +568,7 @@ var
 begin
   // User have selected a preset.
   if FFlag_LockPresetSelectionChange then
-    exit;
+    Exit;
 
   cb := Sender as TComboBox;
 

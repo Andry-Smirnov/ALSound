@@ -116,8 +116,8 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
-  if aChannelCount = 0 then exit;
-  if aFrameCount = 0 then exit;
+  if aChannelCount = 0 then Exit;
+  if aFrameCount = 0 then Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do begin
@@ -138,8 +138,8 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
-  if aChannelCount = 0 then exit;
-  if aFrameCount = 0 then exit;
+  if aChannelCount = 0 then Exit;
+  if aFrameCount = 0 then Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do begin
@@ -160,8 +160,8 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
-  if aChannelCount <= 0 then exit;
-  if aFrameCount <= 0 then exit;
+  if aChannelCount <= 0 then Exit;
+  if aFrameCount <= 0 then Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
 
@@ -339,7 +339,7 @@ begin
   end;
 
   if p = NIL then
-    exit;
+    Exit;
 
   // Get peak sample values
   while aFrameCount > 0 do
@@ -377,7 +377,7 @@ begin
   end;
 
   if p = NIL then
-    exit;
+    Exit;
 
   // Get peak sample values
   while aFrameCount > 0 do
