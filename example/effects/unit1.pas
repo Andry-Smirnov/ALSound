@@ -317,7 +317,7 @@ begin
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
-var i: integer;
+var i: Integer;
 begin
   i := ComboBox1.ItemIndex;
   if i = -1 then exit;
@@ -326,7 +326,7 @@ end;
 
 procedure TForm1.ComboBox2Change(Sender: TObject);
 var
-  i: integer;
+  i: Integer;
 begin
   i := ComboBox2.ItemIndex;
   if i = -1 then exit;
@@ -391,7 +391,7 @@ begin
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
-var i: integer;
+var i: Integer;
   txt: string;
 begin
   // display some error message or hints

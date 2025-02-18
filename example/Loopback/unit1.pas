@@ -89,16 +89,16 @@ type
     // tracks instance
     FTracks: array[0..2] of TTrack;
     FMixingTime: double;
-    FCanceled: boolean;
+    FCanceled: Boolean;
     procedure InitTracks;
-    function GetSampleRate: integer;
+    function GetSampleRate: Integer;
     function GetChannel: TALSLoopbackChannel;
     function GetSampleType: TALSLoopbackSampleType;
-    procedure EnableMixGUI(aState: boolean);
+    procedure EnableMixGUI(aState: Boolean);
   private
     procedure ProcessLoopbackContextOnProgress(Sender: TALSLoopbackContext;
       aTimePos: double; const aFrameBuffer: TALSLoopbackFrameBuffer;
-      var SaveBufferToFile, Cancel: boolean);
+      var SaveBufferToFile, Cancel: Boolean);
   public
 
   end;
@@ -114,7 +114,7 @@ implementation
 
 procedure TForm1.BitBtn1Click(Sender: TObject);
 var
-  i: integer;
+  i: Integer;
 begin
   if FPlaybackContext <> NIL then
     exit;
@@ -196,7 +196,7 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 var
-  i: integer;
+  i: Integer;
 begin
   BStopClick(NIL);
 
@@ -216,7 +216,7 @@ end;
 
 procedure TForm1.BStopClick(Sender: TObject);
 var
-  i: integer;
+  i: Integer;
 begin
   if FPlaybackContext = NIL then
     exit;
@@ -230,7 +230,7 @@ end;
 procedure TForm1.BMixToFileClick(Sender: TObject);
 var
   FAttribs: TALSContextAttributes;
-  i: integer;
+  i: Integer;
   fileFormat: TALSFileFormat;
   outputFilename: string;
 begin
@@ -354,7 +354,7 @@ end;
 procedure TForm1.TrackBar1Change(Sender: TObject);
 var
   tb: TTrackBar;
-  i: integer;
+  i: Integer;
 begin
   // user change volume
   tb := Sender as TTrackBar;
@@ -378,7 +378,7 @@ begin
   FTracks[2].LabelFilename := Label3;
 end;
 
-function TForm1.GetSampleRate: integer;
+function TForm1.GetSampleRate: Integer;
 begin
   case ComboBox4.ItemIndex of
     0: Result := 8000;
@@ -416,7 +416,7 @@ begin
   end;
 end;
 
-procedure TForm1.EnableMixGUI(aState: boolean);
+procedure TForm1.EnableMixGUI(aState: Boolean);
 begin
   Panel1.Enabled := aState;
   Panel2.Enabled := aState;
@@ -437,7 +437,7 @@ end;
 //
 procedure TForm1.ProcessLoopbackContextOnProgress(Sender: TALSLoopbackContext;
   aTimePos: double; const aFrameBuffer: TALSLoopbackFrameBuffer;
-  var SaveBufferToFile, Cancel: boolean);
+  var SaveBufferToFile, Cancel: Boolean);
 begin
   FMixingTime := aTimePos;
 

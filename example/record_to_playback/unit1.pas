@@ -115,7 +115,7 @@ type
 
     FEffects: array[0..2] of TALSEffect; // 3 effects applyed on the playback sound
 
-    FFlag_LockPresetSelectionChange: boolean;
+    FFlag_LockPresetSelectionChange: Boolean;
     FPresetIndex: array[0..2] of integer;
 
     FAutowahProp: TALSAutoWahProperties;
@@ -133,11 +133,11 @@ type
 
     FrameChannelsLevel1: TFrameChannelsLevel;
 
-    procedure FillPresetList(aCB: TComboBox; aEffectIndex: integer);
+    procedure FillPresetList(aCB: TComboBox; aEffectIndex: Integer);
     procedure ReconstructEffectChain;
-    procedure CreateEffect(Index: integer);
+    procedure CreateEffect(Index: Integer);
 
-    function CaptureContextIsReady: boolean;
+    function CaptureContextIsReady: Boolean;
     procedure UpdateWidgets;
     procedure ProcessOnCaptureBuffer(Sender: TALSCaptureContext;
                                      const aBuf: TALSCaptureFrameBuffer);
@@ -196,7 +196,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 var
   A: TStringArray;
-  i: integer;
+  i: Integer;
 begin
   // Check if ALSManager encounter an error while loading OpenAL-Soft and LibSndFile
   if ALSManager.Error then
@@ -306,7 +306,7 @@ begin
   FSound.Tone.Value := TrackBar3.Position/TrackBar3.Max;
 end;
 
-procedure TForm1.FillPresetList(aCB: TComboBox; aEffectIndex: integer);
+procedure TForm1.FillPresetList(aCB: TComboBox; aEffectIndex: Integer);
 begin
   aCB.Clear;
   case aEffectIndex of
@@ -359,9 +359,9 @@ begin
   FSound.SetEffectDryWetVolume( FEffects[0], TrackBar1.Position/TrackBar1.Max);
 end;
 
-procedure TForm1.CreateEffect(Index: integer);
+procedure TForm1.CreateEffect(Index: Integer);
 var
-  effectType, presetIndex: integer;
+  effectType, presetIndex: Integer;
 begin
   case Index of
     0: effectType := ComboBox5.ItemIndex;
@@ -430,7 +430,7 @@ begin
   end;
 end;
 
-function TForm1.CaptureContextIsReady: boolean;
+function TForm1.CaptureContextIsReady: Boolean;
 begin
   Result := FCaptureContext <> NIL;
   if Result

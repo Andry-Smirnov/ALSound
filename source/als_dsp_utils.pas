@@ -60,7 +60,7 @@ type
   procedure SplittedToInterleaved_Double(const A: TSplittedChannelsDouble; p: PDouble);
 
   // convert an array of values in range [0..1] to dB.
-  procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: integer);
+  procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: Integer);
 
   // return the mean of the sample for each channel
   function dsp_Mean_Smallint(p: PSmallInt; aFrameCount: longword; aChannelCount: Smallint ): ArrayOfSmallint;
@@ -112,7 +112,7 @@ end;
 
 function InterleavedToSplitted_Smallint(p: PSmallInt; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsSmallInt;
-var ichan: integer;
+var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
@@ -134,7 +134,7 @@ end;
 
 function InterleavedToSplitted_Float(p: PSingle; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsSingle;
-var ichan: integer;
+var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
@@ -156,7 +156,7 @@ end;
 
 function InterleavedToSplitted_Double(p: PDouble; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsDouble;
-var ichan: integer;
+var ichan: Integer;
   isamp: longword;
 begin
   Result := NIL;
@@ -211,9 +211,9 @@ begin
    end;
 end;
 
-procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: integer);
+procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: Integer);
 var
-  i: integer;
+  i: Integer;
 begin
   for i:=1 to aCount do
   begin
@@ -306,7 +306,7 @@ end;
 procedure dsp_RemoveDCBias_Smallint(p: PSmallint; aFrameCount: longword; aChannelCount: Smallint);
 var
   M: ArrayOfSmallint;
-  i: integer;
+  i: Integer;
 begin
   M := dsp_Mean_SmallInt( p, aFrameCount, aChannelCount );
   for i := 0 to High(M) do
@@ -317,7 +317,7 @@ end;
 procedure dsp_RemoveDCBias_Float(p: PSingle; aFrameCount: longword; aChannelCount: Smallint);
 var
   M: ArrayOfSingle;
-  i: integer;
+  i: Integer;
 begin
   M := dsp_Mean_Float( p, aFrameCount, aChannelCount );
   for i := 0 to High(M) do
@@ -328,7 +328,7 @@ end;
 procedure dsp_ComputeLinearLevel_Smallint(p: PSmallint; aFrameCount: longword;
   aChannelCount: Smallint; aTarget: PSingle);
 var
-  i: integer;
+  i: Integer;
   tar: PSingle;
 begin
   tar := aTarget;
@@ -366,7 +366,7 @@ end;
 procedure dsp_ComputeLinearLevel_Float(p: PSingle; aFrameCount: longword;
   aChannelCount: Smallint; aTarget: PSingle);
 var
-  i: integer;
+  i: Integer;
   tar: PSingle;
 begin
   tar := aTarget;

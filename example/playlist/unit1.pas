@@ -104,7 +104,7 @@ begin
 end;
 
 procedure TForm1.SpeedButton4Click(Sender: TObject);
-var i: integer;
+var i: Integer;
 begin
   if not OpenDialog1.Execute then exit;
   for i := 0 to OpenDialog1.Files.Count - 1 do begin

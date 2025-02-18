@@ -943,13 +943,13 @@ type
     // Write the metadata into a file opened in write or read/write mode.
     // Note: read/write mode don't work with MP3 file.
     // Return True if succed
-    function WriteMetaDataTo(aSNDFile: PSNDFILE): boolean;
+    function WriteMetaDataTo(aSNDFile: PSNDFILE): Boolean;
     // Read the metadata from a file opened in read or read/write mode
     procedure ReadMetaDataFrom(aSNDFile: PSNDFILE);
   end;
 
 
-function LoadSndFileLibrary( const aFilename: string ): boolean;
+function LoadSndFileLibrary( const aFilename: string ): Boolean;
 procedure UnloadSndFileLibrary;
 
 // open an audio file in a cross platform way
@@ -964,10 +964,10 @@ var
   _LibSndFile_ReferenceCounter: cardinal = 0;
   _LibSndFile_Handle: TLibHandle = dynlibs.NilHandle;
 
-function LoadSndFileLibrary( const aFilename: string ): boolean;
+function LoadSndFileLibrary( const aFilename: string ): Boolean;
 var
   f: UnicodeString;
-  flag: boolean;
+  flag: Boolean;
 
   function GetProc(const aName: string): Pointer;
   begin
@@ -1110,8 +1110,8 @@ begin
          aMetaData.Genre);
 end;
 
-function TALSFileMetaData.WriteMetaDataTo(aSNDFile: PSNDFILE): boolean;
-var res: boolean;
+function TALSFileMetaData.WriteMetaDataTo(aSNDFile: PSNDFILE): Boolean;
+var res: Boolean;
   procedure WriteStrMeta(aStrType: cint; const aValue: string);
   begin
     if aValue = '' then exit;

@@ -47,7 +47,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure ListBox1SelectionChange(Sender: TObject; User: boolean);
+    procedure ListBox1SelectionChange(Sender: TObject; User: Boolean);
     procedure BStartClick(Sender: TObject);
     procedure BStopClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -57,8 +57,8 @@ type
     FCaptureContext: TALSCaptureContext;
     FFileFormat: longint;
     FFileExt: string;
-    function CaptureContextIsReady: boolean;
-    function FileParametersAreReady: boolean;
+    function CaptureContextIsReady: Boolean;
+    function FileParametersAreReady: Boolean;
     function UserFile: string;
     procedure UpdateWidgets;
     procedure ProcessOnCaptureBuffer(Sender: TALSCaptureContext;
@@ -99,7 +99,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 var
   A: TStringArray;
-  i: integer;
+  i: Integer;
   F: ArrayOfALSSimplifiedAudioFileFormat;
 begin
   // Check if ALSManager encounter an error while loading OpenAL-Soft and LibSndFile
@@ -124,9 +124,9 @@ begin
   UpdateWidgets;
 end;
 
-procedure TForm1.ListBox1SelectionChange(Sender: TObject; User: boolean);
+procedure TForm1.ListBox1SelectionChange(Sender: TObject; User: Boolean);
 var
-  i: integer;
+  i: Integer;
 begin
   // User have selected a format in the listbox
   i := ListBox1.ItemIndex;
@@ -150,7 +150,7 @@ end;
 
 procedure TForm1.BStartClick(Sender: TObject);
 var
-  res: boolean;
+  res: Boolean;
 begin
   // checks if user have choosen all parameters
   if not ( CaptureContextIsReady and FileParametersAreReady )then
@@ -217,14 +217,14 @@ begin
   Timer1.Enabled := True;
 end;
 
-function TForm1.CaptureContextIsReady: boolean;
+function TForm1.CaptureContextIsReady: Boolean;
 begin
   Result := FCaptureContext <> NIL;
   if Result
     then Result := not FCaptureContext.Error;
 end;
 
-function TForm1.FileParametersAreReady: boolean;
+function TForm1.FileParametersAreReady: Boolean;
 begin
   Result := (DirectoryEdit1.Text<>'') and
             (Edit1.Text<>'') and

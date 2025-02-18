@@ -197,7 +197,7 @@ end;
 
 procedure TForm1.SetSoundsAttenuation;
 var
-  m: integer;
+  m: Integer;
 begin
   m := Max( Width, Height );
 

@@ -306,7 +306,7 @@ type
     FEAXReverbProp: TEAXReverbProperties;
     FCompressorProp: TALSCompressorProperties;
 
-    FSettingAPreset: boolean;
+    FSettingAPreset: Boolean;
     procedure ApplyEffectOnSound;
     procedure SetTBPosition(aTB: TTrackBar; aMin, aMax, aValue: single);
     procedure UpdateCaptionAutoWah;
@@ -685,7 +685,7 @@ end;
 
 procedure TForm1.ComboBox10Select(Sender: TObject);
 var
-  f: integer;
+  f: Integer;
 begin
   FSettingAPreset := True;
   if Sender = ComboBox10 then
