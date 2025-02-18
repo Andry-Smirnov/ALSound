@@ -528,7 +528,7 @@ begin
   if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
-    FExtensionLoaded_AL_SOFT_source_resampler := true;
+    FExtensionLoaded_AL_SOFT_source_resampler := True;
     Pointer(alGetStringiSOFT) := GetALExtProc('alGetStringiSOFT', FExtensionLoaded_AL_SOFT_source_resampler);
     Result := FExtensionLoaded_AL_SOFT_source_resampler;
   end
