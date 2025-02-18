@@ -107,7 +107,7 @@ procedure TForm1.SpeedButton4Click(Sender: TObject);
 var i: integer;
 begin
   if not OpenDialog1.Execute then exit;
-  for i:=0 to OpenDialog1.Files.Count-1 do begin
+  for i := 0 to OpenDialog1.Files.Count - 1 do begin
     FPlaybackContext.Playlist.Add(OpenDialog1.Files.Strings[i]);
     ListBox1.Items.Add(ExtractFileName(OpenDialog1.Files.Strings[i]));
   end;
@@ -131,7 +131,7 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
-  Timer1.Enabled:=FALSE;
+  Timer1.Enabled := False;
 
   if FPlaybackContext.Error then
   begin
@@ -146,7 +146,7 @@ begin
                         FPlaybackContext.Playlist.Count.ToString+' - '+
                         ExtractFileName(FPlaybackContext.Playlist.CurrentFile);
       Label3.Tag:=0;
-      Label3.Font.Color:=clDefault;
+      Label3.Font.Color :=clDefault;
       ListBox1.ItemIndex:=FPlaybackContext.Playlist.CurrentIndex;
     end;
 
@@ -154,10 +154,10 @@ begin
     Label3.Tag := Label3.Tag+1;
     case Label3.Tag of
       0..1: begin
-       Label3.Font.Color:=clGray;
+       Label3.Font.Color :=clGray;
       end;
       2: begin
-       Label3.Font.Color:=clDefault;
+       Label3.Font.Color :=clDefault;
       end;
       3: Label3.Tag := 0;
     end;
@@ -167,7 +167,7 @@ begin
    ALS_STOPPED: begin
      Label3.Caption := 'Stopped';
      Label3.Tag:=0;
-     Label3.Font.Color:=clDefault;
+     Label3.Font.Color :=clDefault;
      ListBox1.ItemIndex:=-1;
    end;
 

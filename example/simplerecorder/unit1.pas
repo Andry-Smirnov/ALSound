@@ -116,7 +116,7 @@ begin
   F := ALSManager.ListOfAudioFileFormat_Simplified;
   ListBox1.Clear;
   for i := 0 to High(F) do
-    ListBox1.Items.Add(F[i].Name + ' ( .' + F[i].FileExt + ' )'{+'  '+IntToHex(F[i].Format,8)});
+    ListBox1.Items.Add(F[i].Name + ' ( .' + F[i].FileExt + ' )'{+'  '+IntToHex(F[i].Format, 8)});
 
   // Init path with the folder path of this application
   DirectoryEdit1.Text := ExtractFilePath(Application.Location);

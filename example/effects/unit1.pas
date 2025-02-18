@@ -414,7 +414,7 @@ begin
   // fill the combo box with available velocity curve list
   ComboBox1.Clear;
   ComboBox2.Clear;
-  for i:=0 to ALSVelocityCurveList.Count-1 do
+  for i := 0 to ALSVelocityCurveList.Count - 1 do
    begin
     ComboBox1.Items.Add( ALSVelocityCurveList.GetCurveByIndex( i ).Name );
     ComboBox2.Items.Add( ALSVelocityCurveList.GetCurveByIndex( i ).Name );
@@ -435,12 +435,12 @@ begin
   case BMute.Tag of
     0: begin
       BMute.Tag:=1;
-      BMute.Color:=$0080FFFF;
-      if FSound <> NIl then FSound.Mute:=TRUE;
+      BMute.Color :=$0080FFFF;
+      if FSound <> NIl then FSound.Mute := TRUE;
     end;
     1: begin
       BMute.Tag:=0;
-      BMute.Color:=$007D7D7D;
+      BMute.Color :=$007D7D7D;
       if FSound <> NIl then FSound.Mute:=FALSE;
     end;
   end;
@@ -479,7 +479,7 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   s: string;
 begin
-  Timer1.Enabled:=FALSE;
+  Timer1.Enabled := False;
   if FSound = NIL then begin
     Label1.Caption := ' ';
     Label4.Caption := ' ';
@@ -540,12 +540,12 @@ end;
 
 procedure TForm1.UncheckAllEffects;
 begin
-  CheckBox2.Checked:=FALSE;
-  CheckBox3.Checked:=FALSE;
-  CheckBox4.Checked:=FALSE;
-  CheckBox5.Checked:=FALSE;
-  CheckBox6.Checked:=FALSE;
-  CheckBox7.Checked:=FALSE;
+  CheckBox2.Checked := False;
+  CheckBox3.Checked := False;
+  CheckBox4.Checked := False;
+  CheckBox5.Checked := False;
+  CheckBox6.Checked := False;
+  CheckBox7.Checked := False;
 end;
 
 

@@ -34,7 +34,7 @@ const
   ALS_DECIBEL_MIN_VALUE = -60;
 
 type
-  ArrayOfByte = array of byte;
+  ArrayOfByte = array of Byte;
   ArrayOfQWord = array of QWord;
   ArrayOfSmallint = array of SmallInt;
   ArrayOfSingle = array of Single;
@@ -122,7 +122,7 @@ begin
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do begin
     isamp := 0;
-    for ichan:=0 to aChannelCount-1 do begin
+    for ichan:=0 to aChannelCount - 1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -144,7 +144,7 @@ begin
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do begin
     isamp := 0;
-    for ichan:=0 to aChannelCount-1 do begin
+    for ichan:=0 to aChannelCount - 1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -167,7 +167,7 @@ begin
 
   while aFrameCount > 0 do begin
     isamp := 0;
-    for ichan:=0 to aChannelCount-1 do begin
+    for ichan:=0 to aChannelCount - 1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -235,7 +235,7 @@ begin
   FillChar( qwTemp, SizeOf(QWord)*aChannelCount, $00);
   while aFrameCount>0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       qwTemp[i] := qwTemp[i] + QWord( p^ );
       inc( p );
@@ -244,7 +244,7 @@ begin
   end;
   Result := NIL;
   SetLength( Result, aChannelCount );
-  for i:=0 to aChannelCount-1 do
+  for i := 0 to aChannelCount - 1 do
     Result[i] := Round( qwTemp[i] / aFrameCount );
 end;
 
@@ -259,7 +259,7 @@ begin
   fc := aFrameCount;
   while fc>0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       Result[i] := Result[i] + p^;
       inc( p );
@@ -267,7 +267,7 @@ begin
     dec( fc );
   end;
 
-  for i:=0 to aChannelCount-1 do
+  for i := 0 to aChannelCount - 1 do
     Result[i] := Result[i] / aFrameCount;
 end;
 
@@ -278,7 +278,7 @@ var
 begin
   while aFrameCount>0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := p^ + aValues[i];
       inc( p );
@@ -294,7 +294,7 @@ var
 begin
   while aFrameCount>0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := p^ + aValues[i];
       inc( p );
@@ -309,7 +309,7 @@ var
   i: integer;
 begin
   M := dsp_Mean_SmallInt( p, aFrameCount, aChannelCount );
-  for i:=0 to High(M) do
+  for i := 0 to High(M) do
     M[i] := -M[i];
   dsp_Add_Smallint(p, aFrameCount, aChannelCount, M);
 end;
@@ -320,7 +320,7 @@ var
   i: integer;
 begin
   M := dsp_Mean_Float( p, aFrameCount, aChannelCount );
-  for i:=0 to High(M) do
+  for i := 0 to High(M) do
     M[i] := -M[i];
   dsp_Add_Float(p, aFrameCount, aChannelCount, M);
 end;
@@ -409,7 +409,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := Smallint(0);
       inc(p); //p := p + SizeOf(Smallint);
@@ -425,7 +425,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := 0.0;
       inc(p);
@@ -441,7 +441,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := Smallint(Random(32768) - Random(32769 ));
       inc(p); //p := p + SizeOf(Smallint);
@@ -457,7 +457,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := Random - Random;
       inc(p);
@@ -473,7 +473,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := Smallint(EnsureRange(Round(p^*aGain), -32768, 32767));
       inc(p);
@@ -489,7 +489,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i:=0 to aChannelCount-1 do
+    for i := 0 to aChannelCount - 1 do
     begin
       p^ := p^ * aGain;
       inc(p);

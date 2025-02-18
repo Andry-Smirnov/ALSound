@@ -203,7 +203,7 @@ begin
   // first, (re-)creates a playback context
   FPlaybackContext := ALSManager.CreateDefaultPlaybackContext;
   // then adds the user's sounds
-  for i:=0 to High(FTracks) do
+  for i := 0 to High(FTracks) do
   begin
     if FTracks[i].Filename <> '' then
     begin
@@ -223,7 +223,7 @@ begin
 
   FreeAndNil(FPlaybackContext);
 
-  for i:=0 to High(FTracks) do
+  for i := 0 to High(FTracks) do
     FTracks[i].Sound := NIL;
 end;
 
@@ -274,7 +274,7 @@ begin
 
   // Adds the sounds to our loopback context and play them.
   // Only sounds in playing state will be mixed.
-  for i:=0 to High(FTracks) do
+  for i := 0 to High(FTracks) do
     if FTracks[i].Filename <> '' then
     begin
       FTracks[i].Sound := FLoopbackContext.AddStream(FTracks[i].Filename);
@@ -343,7 +343,7 @@ begin
   FreeAndNil(FLoopbackContext);
 
   // Prepare for another mixing
-  for i:=0 to High(FTracks) do
+  for i := 0 to High(FTracks) do
     FTracks[i].Sound := NIL;
   ProgressBar1.Position := 0;
   ProgressBar2.Position := ALS_DECIBEL_MIN_VALUE;
@@ -368,7 +368,7 @@ procedure TForm1.InitTracks;
 var
   i: Integer;
 begin
-  for i:=0 to High(FTracks) do
+  for i := 0 to High(FTracks) do
   begin
     FTracks[i].Sound := NIL;
     FTracks[i].Volume:= ALS_VOLUME_MAX;

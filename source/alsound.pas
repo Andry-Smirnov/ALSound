@@ -225,7 +225,7 @@ type
                      AL_EFFECT_EQUALIZER = $000C,
                      AL_EFFECT_EAXREVERB = $8000 );
 
-  ArrayOfByte = array of byte;
+  ArrayOfByte = array of Byte;
   ArrayOfALint = array of ALint;
 
 
@@ -2174,7 +2174,7 @@ begin
 
     FOpenALSoftLibraryLoaded := False;
     FOpenALSoftLibraryFilename := '';
-    for i:=0 to High(names) do
+    for i := 0 to High(names) do
       if LoadOpenALCoreLibrary(names[i]) then
       begin
         FOpenALSoftLibraryLoaded := True;
@@ -2231,7 +2231,7 @@ begin
 
     FLibSndFileLibraryLoaded := False;
     FLibSndFileLibraryFilename := '';
-    for i:=0 to High(names) do
+    for i := 0 to High(names) do
       if LoadSndFileLibrary(names[i]) then
       begin
         FLibSndFileLibraryLoaded := True;
@@ -2284,7 +2284,7 @@ begin
 
     _defaultDeviceName := openalsoft.GetDefaultDeviceName;
     SetLength(FPlaybackDevices, Length(A));
-    for i:=0 to High(A) do
+    for i := 0 to High(A) do
     begin
       FPlaybackDevices[i].InitDefault;
       FPlaybackDevices[i].Name := A[i];
@@ -2301,7 +2301,7 @@ var
   i: integer;
 begin
   if not Error and (aDeviceHandle <> NIL) then
-    for i:=0 to High(FPlaybackDevices) do
+    for i := 0 to High(FPlaybackDevices) do
       if FPlaybackDevices[i].Handle = aDeviceHandle then
       begin
         FPlaybackDevices[i].Close;
@@ -2314,7 +2314,7 @@ var
   i: integer;
 begin
   if not Error then
-    for i:=0 to High(FPlaybackDevices) do
+    for i := 0 to High(FPlaybackDevices) do
       if FPlaybackDevices[i].OpenedCount > 0 then
         FPlaybackDevices[i].DoCloseDevice;
 end;
@@ -2479,7 +2479,7 @@ begin
       sf_command(NIL, SFC_GET_SIMPLE_FORMAT_COUNT, @count, SizeOf(cint));
       SetLength(FSimplifiedFileFormats, count);
 
-      for k := 0 to count-1 do
+      for k := 0 to Count - 1 do
       begin
         format_info.format := k;
         sf_command(NIL, SFC_GET_SIMPLE_FORMAT, @format_info, SizeOf(format_info));
@@ -2505,7 +2505,7 @@ begin
     A := ListOfAudioFileFormat_Simplified;
     Result := StringForAudioFile+'|';
     flag := False;
-    for i:=0 to High(A) do
+    for i := 0 to High(A) do
       if Pos(A[i].FileExt, Result) = 0 then
       begin
         if flag then
@@ -3398,12 +3398,12 @@ begin
         end
         else
         begin // we mute the first effect of the chain
-          for i:=0 to FParentContext.GetSoundCount-1 do // scans all sound of the context
+          for i := 0 to FParentContext.GetSoundCount - 1 do // scans all sound of the context
             with FParentContext.GetSoundByIndex(i) do
             begin
               EnterCS;
               try
-                for j:=0 to High(FAuxiliarySend) do  // connects the AuxSend to the new effect slot
+                for j := 0 to High(FAuxiliarySend) do  // connects the AuxSend to the new effect slot
                   if FAuxiliarySend[j].IsConnectedWithChain(FirstEffectInChain) then
                     FAuxiliarySend[j].ConnectTo(targetSlotID);
               finally
@@ -3438,12 +3438,12 @@ begin
           end
           else
           begin // re-connects the first effect of the chain to the auxiliary sends.
-            for i:=0 to FParentContext.GetSoundCount-1 do
+            for i := 0 to FParentContext.GetSoundCount - 1 do
               with FParentContext.GetSoundByIndex(i) do
               begin
                 EnterCS;
                 try
-                  for j:=0 to High(FAuxiliarySend) do
+                  for j := 0 to High(FAuxiliarySend) do
                     if FAuxiliarySend[j].IsConnectedWithChain(FirstEffectInChain) then
                       FAuxiliarySend[j].ConnectTo(Self.FSlotID);
                 finally
@@ -3605,7 +3605,7 @@ begin
       while processed > 0 do
       begin
         dec(processed);
-        for i:=0 to High(FBuffers) do
+        for i := 0 to High(FBuffers) do
           if FBuffers[i].BufferID = FTempBufID[processed] then
           begin
             FBuffers[i].FQueued := False;
@@ -3616,7 +3616,7 @@ begin
 
     // search the index of the first unqueued buffer -> only its ID will be used
     Index := -1;
-    for i:=0 to High(FBuffers) do
+    for i := 0 to High(FBuffers) do
       if not FBuffers[i].Queued then
       begin
         Index := i;
@@ -3798,7 +3798,7 @@ begin
   if not Error then
   begin
     // Now queue the used buffers
-    for i:=0 to FUsedBuffer - 1 do
+    for i := 0 to FUsedBuffer - 1 do
     begin
       alSourceQueueBuffers(FSource, 1, @FBuffers[i].BufferID);
       CheckALError(als_ErrorWhileQueuingBuffer);
@@ -4008,7 +4008,7 @@ begin
       alSourceStop(FSource);
 
     alSourcei(FSource, AL_BUFFER, 0); // unqueue all buffer from source
-    for i:=0 to High(FBuffers) do
+    for i := 0 to High(FBuffers) do
       FBuffers[i].Queued := False;
 
     FFrameReadAccu := Round(AValue/TotalDuration*FFrameCount);
@@ -4514,7 +4514,7 @@ begin
   if Error then exit;
 
   // disconnect effect from auxiliary send
-  for i:=0 to SoundCount-1 do
+  for i := 0 to SoundCount - 1 do
     GetSoundByIndex(i).RemoveEffect(aEffect);
 
   LockContext( FContext );
@@ -4692,7 +4692,7 @@ begin
     begin
       alcGetIntegerv(FParentDevice, ALC_NUM_HRTF_SPECIFIERS_SOFT, 1, @num_hrtf);
       SetLength(Result, num_hrtf);
-      for i:=0 to num_hrtf-1 do
+      for i := 0 to num_hrtf-1 do
         Result[i] := FParentDeviceItem^.FalcGetStringiSOFT(FParentDevice, ALC_HRTF_SPECIFIER_SOFT, ALCSizei(i));
     end;
   finally
@@ -4713,7 +4713,7 @@ begin
         if num_resamplers <> 0 then
         begin
           SetLength(Result, num_resamplers);
-          for i:=0 to num_resamplers-1 do
+          for i := 0 to num_resamplers-1 do
             Result[i] := StrPas(alGetStringiSOFT(AL_RESAMPLER_NAME_SOFT, i));
         end;
         alGetError(); // reset error
@@ -4964,7 +4964,7 @@ begin
   CreateParameters;
 
   InitCriticalSection( FCriticalSection );
-  FThreadIsStarted:=False;
+  FThreadIsStarted := False;
   FThread := TALSThread.Create(@DoUpdate, 10, True);
   FThread.Priority := tpHighest;
   // waits for the thread to be started to prevent any problems
@@ -5085,7 +5085,7 @@ begin
   Tone.Free;
   DoneCriticalSection(FCriticalSection);
   if not Error then
-    for i:=0 to High(FAuxiliarySend) do
+    for i := 0 to High(FAuxiliarySend) do
       FAuxiliarySend[i].Disconnect;
 end;
 
@@ -5303,7 +5303,7 @@ var
 begin
   FBuffers := NIL;
   SetLength(FBuffers, aCount);
-  for i:=0 to High(FBuffers) do
+  for i := 0 to High(FBuffers) do
   begin
     FBuffers[i].Init(FChannelCount, FParentContext.FInternalSampleType);
     err := FBuffers[i].GenerateBufferID;
@@ -5316,12 +5316,12 @@ procedure TALSSound.SetBuffersFrameCapacity(aFrameCapacity: longword);
 var
   i, j: Integer;
 begin
-  for i:=0 to High(FBuffers) do
+  for i := 0 to High(FBuffers) do
   begin
     FBuffers[i].FrameCapacity := aFrameCapacity;
     if FBuffers[i].OutOfMemory then
     begin
-      for j:=0 to i do
+      for j := 0 to i do
        FBuffers[j].FreeMemory;
       SetError(als_OutOfMemory);
     end;
@@ -5332,7 +5332,7 @@ procedure TALSSound.FreeBuffers;
 var
   i: Integer;
 begin
-  for i:=0 to High(FBuffers) do
+  for i := 0 to High(FBuffers) do
   begin
     FBuffers[i].FreeMemory;
     FBuffers[i].DeleteBufferID;
@@ -5522,7 +5522,7 @@ end;
 procedure TALSSound.SetPositionRelativeToListener(AValue: boolean);
 begin
   if FPositionRelativeToListener=AValue then Exit;
-  FPositionRelativeToListener:=AValue;
+  FPositionRelativeToListener :=AValue;
   if Error then
     exit;
 
@@ -5585,7 +5585,7 @@ begin
     FDirectFilter.HighFreqGain := trebleGain1;
 
     if FApplyToneOnAuxSend then
-      for i:=0 to High(FAuxiliarySend) do
+      for i := 0 to High(FAuxiliarySend) do
       begin
         FAuxiliarySend[i].LowFreqGain := bassGain1;
         FAuxiliarySend[i].HighFreqGain := trebleGain1;
@@ -5607,7 +5607,7 @@ begin
   LockContext( FParentContext.FContext );
   EnterCS;
   try
-    for i:=0 to High(FAuxiliarySend) do
+    for i := 0 to High(FAuxiliarySend) do
       if not AValue then
       begin
         FAuxiliarySend[i].LowFreqGain := 1.0;

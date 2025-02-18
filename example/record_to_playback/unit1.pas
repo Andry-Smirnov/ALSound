@@ -337,7 +337,7 @@ begin
   FPlaybackContext.DeleteEffect(FEffects[1]);
   FPlaybackContext.DeleteEffect(FEffects[2]);
 
-  for i:=0 to High(FEffects) do
+  for i := 0 to High(FEffects) do
   begin
    // FPlaybackContext.DeleteEffect(FEffects[i]);
     CreateEffect(i);
