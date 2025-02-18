@@ -1203,7 +1203,7 @@ begin
            '      DecayHFLimit: '+ComboBox9.ItemIndex.ToString+' );';
   end;
 
-  if Length(txt)>0 then
+  if Length(txt) > 0 then
   begin
     Clipboard.AsText := txt;
     ShowMessage('Preset '+n+' have been copied to the clipboard'+LINEENDING+
