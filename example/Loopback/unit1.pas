@@ -116,7 +116,7 @@ procedure TForm1.BitBtn1Click(Sender: TObject);
 var
   i: Integer;
 begin
-  if FPlaybackContext <> NIL then
+  if FPlaybackContext <> nil then
     Exit;
 
   if not OpenDialog1.Execute then Exit;
@@ -179,7 +179,7 @@ end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  if FPlaybackContext <> NIL then
+  if FPlaybackContext <> nil then
     FPlaybackContext.Free;
 end;
 
@@ -218,13 +218,13 @@ procedure TForm1.BStopClick(Sender: TObject);
 var
   i: Integer;
 begin
-  if FPlaybackContext = NIL then
+  if FPlaybackContext = nil then
     Exit;
 
   FreeAndNil(FPlaybackContext);
 
   for i := 0 to High(FTracks) do
-    FTracks[i].Sound := NIL;
+    FTracks[i].Sound := nil;
 end;
 
 procedure TForm1.BMixToFileClick(Sender: TObject);
@@ -344,7 +344,7 @@ begin
 
   // Prepare for another mixing
   for i := 0 to High(FTracks) do
-    FTracks[i].Sound := NIL;
+    FTracks[i].Sound := nil;
   ProgressBar1.Position := 0;
   ProgressBar2.Position := ALS_DECIBEL_MIN_VALUE;
   ProgressBar3.Position := ALS_DECIBEL_MIN_VALUE;
@@ -360,7 +360,7 @@ begin
   tb := Sender as TTrackBar;
   i := tb.Tag;
   FTracks[i].Volume := tb.Position/tb.Max;
-  if FTracks[i].Sound <> NIL then
+  if FTracks[i].Sound <> nil then
     FTracks[i].Sound.Volume.Value := FTracks[i].Volume;
 end;
 
@@ -370,8 +370,8 @@ var
 begin
   for i := 0 to High(FTracks) do
   begin
-    FTracks[i].Sound := NIL;
-    FTracks[i].Volume:= ALS_VOLUME_MAX;
+    FTracks[i].Sound := nil;
+    FTracks[i].Volume := ALS_VOLUME_MAX;
   end;
   FTracks[0].LabelFilename := Label1;
   FTracks[1].LabelFilename := Label2;

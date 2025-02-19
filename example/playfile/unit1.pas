@@ -99,27 +99,27 @@ end;
 procedure TForm1.SpeedButton1Click(Sender: TObject);
 begin
   // Reposition tone cursor to middle (normal).
-  if FSound <> NIL then
+  if FSound <> nil then
     TrackBar2.Position := TrackBar1.Max div 2;
 end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
   // User change sound's volume.
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.Volume.Value := TrackBar1.Position/TrackBar1.Max;
 end;
 
 procedure TForm1.TrackBar2Change(Sender: TObject);
 begin
   // User change sound's tone.
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.Tone.Value := TrackBar2.Position/TrackBar2.Max;
 end;
 
 procedure TForm1.ProcessOnIdle(Sender: TObject; var Done: Boolean);
 begin
-  if FSound <> NIL then
+  if FSound <> nil then
   begin
     FrameChannelsLevel1.UpdateProgressBar(FSound.ChannelsLevel[0],
                                           FSound.ChannelsLevel[1]);
@@ -136,7 +136,7 @@ begin
   Label11.Caption := ExtractFileName( OD1.FileName );
 
   // Free the previous (if any)
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
   // Creates the new one as stream and enable sound monitoring to retrieve the
@@ -164,7 +164,7 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
 
   if Sender = BPlay then
     FSound.Play(True);

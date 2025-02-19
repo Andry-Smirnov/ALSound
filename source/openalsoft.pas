@@ -138,7 +138,7 @@ end;
 
 function GetALCExtProc(aDevice: PALCDevice; const aName: string; var aFlag: Boolean): Pointer;
 begin
-  Result := NIL;
+  Result := nil;
   if FLoaded_OpenALCore_ then
     Result := alcGetProcAddress(aDevice, PChar(aName));
   aFlag := aFlag and (Result <> nil);
@@ -354,8 +354,8 @@ begin
   end
   else
   begin
-    alcSetThreadContext := NIL;
-    alcGetThreadContext := NIL;
+    alcSetThreadContext := nil;
+    alcGetThreadContext := nil;
   end;
 end;
 
@@ -431,9 +431,9 @@ begin
   end
   else
   begin
-    alcLoopbackOpenDeviceSOFT := NIL;
-    alcIsRenderFormatSupportedSOFT := NIL;
-    alcRenderSamplesSOFT := NIL;
+    alcLoopbackOpenDeviceSOFT := nil;
+    alcIsRenderFormatSupportedSOFT := nil;
+    alcRenderSamplesSOFT := nil;
   end;
 end;
 
@@ -496,8 +496,8 @@ begin
   end
   else
   begin
-    alcDevicePauseSOFT := NIL;
-    alcDeviceResumeSOFT := NIL;
+    alcDevicePauseSOFT := nil;
+    alcDeviceResumeSOFT := nil;
   end;
 end;
 
@@ -514,8 +514,8 @@ begin
   end
   else
   begin
-    alcGetStringiSOFT := NIL;
-    alcResetDeviceSOFT := NIL;
+    alcGetStringiSOFT := nil;
+    alcResetDeviceSOFT := nil;
   end;
 end;
 
@@ -548,7 +548,7 @@ begin
   end
   else
   begin
-    alcGetInteger64vSOFT := NIL;
+    alcGetInteger64vSOFT := nil;
   end;
 end;
 
@@ -584,7 +584,7 @@ begin
   end
   else
   begin
-    alcReopenDeviceSOFT := NIL;
+    alcReopenDeviceSOFT := nil;
   end;
 end;
 
@@ -641,7 +641,7 @@ function GetDeviceNames: TStringArray;
 var
   s: PChar;
 begin
-  Result := NIL;
+  Result := nil;
   if not FLoaded_OpenALCore_ then Exit;
 
   if alcIsExtensionPresent(nil, PChar('ALC_ENUMERATE_ALL_EXT')) then
@@ -655,7 +655,7 @@ function GetCaptureDeviceNames: TStringArray;
 var
   s: PChar;
 begin
-  Result := NIL;
+  Result := nil;
   if not FLoaded_OpenALCore_ then Exit;
 
   s := alcGetString(nil, ALC_CAPTURE_DEVICE_SPECIFIER);
@@ -685,7 +685,7 @@ function ListOfContextExtension(aDevice: PALCDevice): TStringArray;
 var
   s: string;
 begin
-  Result := NIL;
+  Result := nil;
   if not FLoaded_OpenALCore_ then Exit;
 
   s := StrPas(alcGetString(aDevice, ALC_EXTENSIONS));
@@ -699,7 +699,7 @@ function GetALExtension: TStringArray;
 var
   s: string;
 begin
-  Result := NIL;
+  Result := nil;
   if not FLoaded_OpenALCore_ then Exit;
 
   s := StrPas(alGetString(AL_EXTENSIONS));

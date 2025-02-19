@@ -150,7 +150,7 @@ end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
 
   // User moves trackbar WET or DRY gain
 
@@ -171,7 +171,7 @@ begin
   Label11.Caption := ExtractFileName( OD1.FileName );
 
   // Free the old one
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
   // Creates the new one as stream
@@ -201,7 +201,7 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
 
   // User have clicked on Play/Pause/Stop button
 
@@ -217,7 +217,7 @@ end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
 
   // Mute the appropriate effect
 

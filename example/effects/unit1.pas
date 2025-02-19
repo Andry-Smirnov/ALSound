@@ -174,7 +174,7 @@ implementation
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  FSound.Play;
  FSound.Volume.Value := ALS_VOLUME_MAX;
 end;
@@ -190,7 +190,7 @@ begin
  Label11.Caption := ExtractFileName( OD1.FileName );
 
  // Free the old one
- if FSound <> NIL then
+ if FSound <> nil then
    FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
  // Creates the new one as stream
@@ -217,25 +217,25 @@ end;
 
 procedure TForm1.BPauseClick(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  if FSound <> nil then FSound.Pause;
 end;
 
 procedure TForm1.BStopClick(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  if FSound <> nil then FSound.Stop;
 end;
 
 procedure TForm1.BFadeInClick(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  FSound.FadeIn( ALS_VOLUME_MAX, FSE1.Value, TALSCurveID(ComboBox1.ItemIndex) );
 end;
 
 procedure TForm1.BFadeOutClick(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
   FSound.FadeOut( FSE2.Value, TALSCurveID(ComboBox2.ItemIndex) );
 end;
 
@@ -246,7 +246,7 @@ end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
   FSound.Loop := CheckBox1.Checked;
 end;
 
@@ -318,7 +318,7 @@ end;
 
 procedure TForm1.CheckBox8Change(Sender: TObject);
 begin
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.ApplyToneOnAuxSend := CheckBox8.Checked;
 end;
 
@@ -480,7 +480,7 @@ end;
 
 procedure TForm1.TBToneChange(Sender: TObject);
 begin
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.Tone.Value := TBTone.Position/TBTone.Max;
 end;
 
@@ -489,14 +489,15 @@ var
   s: string;
 begin
   Timer1.Enabled := False;
-  if FSound = NIL then begin
-    Label1.Caption := ' ';
-    Label4.Caption := ' ';
-    Label15.Caption := ' ';
-    Label17.Caption := ' ';
-    Timer1.Enabled:=TRUE;
-    Exit;
-  end;
+  if FSound = nil then
+    begin
+      Label1.Caption := ' ';
+      Label4.Caption := ' ';
+      Label15.Caption := ' ';
+      Label17.Caption := ' ';
+      Timer1.Enabled := True;
+      Exit;
+    end;
 
   if FSound.Error then
     Label4.Caption := FSound.StrError
@@ -516,18 +517,18 @@ begin
     end;
     Label4.Caption := 'State : ' + s;
   end;
-  Timer1.Enabled:=TRUE;
+  Timer1.Enabled := True;
 end;
 
 procedure TForm1.TBVolumeChange(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  FSound.Volume.Value := TBVolume.Position/TBVolume.Max;
 end;
 
 procedure TForm1.TBPitchChange(Sender: TObject);
 begin
- if FSound = NIL then Exit;
+ if FSound = nil then Exit;
  FSound.Pitch.Value := TBPitch.Position / 100;
  Label3.Caption := 'Pitch : ' + formatfloat('0.00', FSound.Pitch.Value);
 end;
@@ -535,7 +536,7 @@ end;
 procedure TForm1.TBPanChange(Sender: TObject);
 var v: single;
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
   v:=TBPan.Position/TBPan.Max;
   FSound.Pan.Value:=v;
   Label12.Caption := 'Pan: ' + formatfloat('0.0', v);
@@ -543,7 +544,7 @@ end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
-  if FSound <> NIL then
+  if FSound <> nil then
     FSound.SetDryGain(TrackBar1.Position/TrackBar1.Max);
 end;
 

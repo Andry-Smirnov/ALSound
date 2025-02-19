@@ -1123,7 +1123,7 @@ var res: Boolean;
   end;
 begin
   Result := False;
-  if aSNDFile = NIL then Exit;
+  if aSNDFile = nil then Exit;
 
   res := True;
   WriteStrMeta(SF_STR_TITLE, PChar(Title));
@@ -1150,7 +1150,7 @@ procedure TALSFileMetaData.ReadMetaDataFrom(aSNDFile: PSNDFILE);
   end;
 begin
   InitDefault;
-  if aSNDFile = NIL then Exit;
+  if aSNDFile = nil then Exit;
 
   Title := ReadStrMeta(SF_STR_TITLE);
   Copyright := ReadStrMeta(SF_STR_COPYRIGHT);

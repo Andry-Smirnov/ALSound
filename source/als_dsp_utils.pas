@@ -115,7 +115,7 @@ function InterleavedToSplitted_Smallint(p: PSmallInt; aFrameCount: longword;
 var ichan: Integer;
   isamp: longword;
 begin
-  Result := NIL;
+  Result := nil;
   if aChannelCount = 0 then Exit;
   if aFrameCount = 0 then Exit;
 
@@ -137,7 +137,7 @@ function InterleavedToSplitted_Float(p: PSingle; aFrameCount: longword;
 var ichan: Integer;
   isamp: longword;
 begin
-  Result := NIL;
+  Result := nil;
   if aChannelCount = 0 then Exit;
   if aFrameCount = 0 then Exit;
 
@@ -159,7 +159,7 @@ function InterleavedToSplitted_Double(p: PDouble; aFrameCount: longword;
 var ichan: Integer;
   isamp: longword;
 begin
-  Result := NIL;
+  Result := nil;
   if aChannelCount <= 0 then Exit;
   if aFrameCount <= 0 then Exit;
 
@@ -230,7 +230,7 @@ var
   i: longword;
   qwTemp: ArrayOfQWord;
 begin
-  qwTemp := NIL;
+  qwTemp := nil;
   SetLength( qwTemp, aChannelCount );
   FillChar( qwTemp, SizeOf(QWord)*aChannelCount, $00);
   while aFrameCount>0 do
@@ -242,7 +242,7 @@ begin
     end;
     dec( aFrameCount );
   end;
-  Result := NIL;
+  Result := nil;
   SetLength( Result, aChannelCount );
   for i := 0 to aChannelCount - 1 do
     Result[i] := Round( qwTemp[i] / aFrameCount );
@@ -252,7 +252,7 @@ function dsp_Mean_Float(p: PSingle; aFrameCount: longword; aChannelCount: Smalli
 var
   i, fc: longword;
 begin
-  Result := NIL;
+  Result := nil;
   SetLength( Result, aChannelCount );
   FillChar( Result[0], SizeOf(single)*aChannelCount, $00);
 
@@ -338,7 +338,7 @@ begin
     inc(tar);
   end;
 
-  if p = NIL then
+  if p = nil then
     Exit;
 
   // Get peak sample values
@@ -376,7 +376,7 @@ begin
     inc(tar);
   end;
 
-  if p = NIL then
+  if p = nil then
     Exit;
 
   // Get peak sample values

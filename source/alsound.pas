@@ -1487,7 +1487,7 @@ end;
 procedure TALSLoopbackContext.SaveBufferToFile;
 var written: sf_count_t;
 begin
-  if (FFile <> NIL) then
+  if (FFile <> nil) then
   begin
     written := 0; // avoid compilation hint
     case FFrameBuffer.SampleType of
@@ -1504,13 +1504,13 @@ end;
 
 procedure TALSLoopbackContext.CloseFile;
 begin
-  if FFile <> NIL then
+  if FFile <> nil then
   begin
     // close file
     sf_write_sync(FFile);
     sf_close(FFile);
 
-    FFile := NIL;
+    FFile := nil;
   end;
 end;
 
@@ -1546,7 +1546,7 @@ begin
   FParentDevice := aDevice^.Handle;
   FParentDeviceItem := PALSDeviceItem(aDevice);
 
-  if aDevice^.Handle = NIL then
+  if aDevice^.Handle = nil then
     SetError(als_ALCanNotOpenLoopbackDevice)
   else if not aDevice^.FHaveExt_ALC_SOFT_loopback then
          SetError(als_ALContextCanNotLoopback);
@@ -1612,12 +1612,12 @@ begin
   FFileInfo.Channels := FFrameBuffer.ChannelCount;
   FFile := ALSOpenAudioFile(aFilename, SFM_WRITE, FFileInfo);
 
-  Result := FFile <> NIL;
+  Result := FFile <> nil;
 end;
 
 procedure TALSLoopbackContext.BeginOfMix;
 begin
-  if FOnProgress = NIL then
+  if FOnProgress = nil then
     DoExceptionNoCallback
   else
     begin
@@ -1634,7 +1634,7 @@ begin
   if Error or MixingError then
     Exit;
 
-  flagSaveToFile := (FFile <> NIL);
+  flagSaveToFile := (FFile <> nil);
   flagCancel := False;
 
   while (aDuration > 0.0005) and not MixingError and not flagCancel do
@@ -1855,7 +1855,7 @@ begin
       if FState = ALS_RECORDING then
       begin
         // Send data to playback
-        if FPlaybackSound <> NIL then
+        if FPlaybackSound <> nil then
           FPlaybackSound.QueueBuffer( @FCapturedFrames );
 
         // Save data to audio file
@@ -1878,14 +1878,14 @@ begin
       LeaveCriticalSection(FCriticalSection);
     end;
     // Send event to main thread
-    if FOnCaptureBuffer <> NIL then
+    if FOnCaptureBuffer <> nil then
       FThread.Queue(FThread, @DoOnCaptureBufferEvent);
   end;
 end;
 
 procedure TALSCaptureContext.DoOnCaptureBufferEvent;
 begin
-  if FOnCaptureBuffer <> NIL then
+  if FOnCaptureBuffer <> nil then
     FOnCaptureBuffer(Self, FCapturedFrames);
 end;
 
@@ -1999,7 +1999,7 @@ end;
 destructor TALSCaptureContext.Destroy;
 begin
   StopCapture;
-  if FThread <> NIL then
+  if FThread <> nil then
   begin
     FThread.Terminate;
     FThread.WaitFor;
@@ -2037,7 +2037,7 @@ end;
 
 function TALSCaptureContext.PrepareToPlayback(aTargetContext: TALSPlaybackContext): TALSPlaybackCapturedSound;
 begin
-  if FPlaybackSound <> NIL then
+  if FPlaybackSound <> nil then
     FPlaybackSound.Kill;
 
   FPlaybackSound := aTargetContext.AddCapturePlayback(FSampleRate, @FCapturedFrames);
@@ -2095,10 +2095,10 @@ begin
   FState := ALS_STOPPED;
 
   // Release the sound instance for playback
-  if FPlaybackSound <> NIL then
+  if FPlaybackSound <> nil then
   begin
     FPlaybackSound.Kill;
-    FPlaybackSound := NIL;
+    FPlaybackSound := nil;
   end;
 
   if FCaptureToFileIsReady then
@@ -2256,7 +2256,7 @@ end;
 
 function TALSManager.GetOpenAlSoftVersion: string;
 begin
-  if FOpenALSoftLibraryLoaded and (alGetString <> NIL) then
+  if FOpenALSoftLibraryLoaded and (alGetString <> nil) then
     Result := StrPas(alGetString(AL_VERSION))
   else
     Result := StrALS_ALLibraryNotLoaded;
@@ -2278,7 +2278,7 @@ var
   i: Integer;
   _defaultDeviceName: string;
 begin
-  FPlaybackDevices := NIL;
+  FPlaybackDevices := nil;
   FDefaultPlaybackDeviceIndex := -1;
 
   if not Error then
@@ -2292,7 +2292,7 @@ begin
     begin
       FPlaybackDevices[i].InitDefault;
       FPlaybackDevices[i].Name := A[i];
-      FPlaybackDevices[i].Handle := NIL;
+      FPlaybackDevices[i].Handle := nil;
       FPlaybackDevices[i].OpenedCount := 0;
       if A[i]=_defaultDeviceName then
         FDefaultPlaybackDeviceIndex := i;
@@ -2304,7 +2304,7 @@ procedure TALSManager.ClosePlaybackDevice(aDeviceHandle: PALCDevice);
 var
   i: Integer;
 begin
-  if not Error and (aDeviceHandle <> NIL) then
+  if not Error and (aDeviceHandle <> nil) then
     for i := 0 to High(FPlaybackDevices) do
       if FPlaybackDevices[i].Handle = aDeviceHandle then
       begin
@@ -2325,7 +2325,7 @@ end;
 
 procedure TALSManager.CloseLoopbackDevice(aDeviceHandle: PALCDevice);
 begin
-  if not Error and (aDeviceHandle <> NIL) then
+  if not Error and (aDeviceHandle <> nil) then
   begin
     if aDeviceHandle = FDefaultLoopbackDevice.Handle then
       FDefaultLoopbackDevice.Close;
@@ -2334,7 +2334,7 @@ end;
 
 constructor TALSManager.Create;
 begin
-  if ALSManager <> NIL then
+  if ALSManager <> nil then
   begin
     Exception.Create('Don''t create TALSManager instance yourself !'+lineending+
            'Only one instance is allowed and it is created at application initialization');
@@ -2372,9 +2372,10 @@ begin
   DoLoadLibrary;
 
   FALSoftLogCallbackIsActive := False;
-  if FALSoftLogCallback <> NIL then begin
-    FALSoftLogCallbackIsActive := SetALSoft_LogCallback(FALSoftLogCallback, FALSoftLogCallback_UserPtr);
-  end;
+  if FALSoftLogCallback <> nil then
+    begin
+      FALSoftLogCallbackIsActive := SetALSoft_LogCallback(FALSoftLogCallback, FALSoftLogCallback_UserPtr);
+    end;
 
   RetrievePlaybackDevices;
 end;
@@ -2396,7 +2397,7 @@ begin
   if not Error then
     Result := openalsoft.GetDeviceNames
   else
-    Result := NIL;
+    Result := nil;
 end;
 
 function TALSManager.DefaultPlaybackDeviceName: string;
@@ -2409,7 +2410,7 @@ begin
   if not Error then
     Result := openalsoft.GetCaptureDeviceNames
   else
-    Result := NIL;
+    Result := nil;
 end;
 
 function TALSManager.DefaultCaptureDeviceName: string;
@@ -2428,7 +2429,7 @@ var
   format, major_count, subtype_count, m, s, k: cint;
 begin
   if not FLibSndFileLibraryLoaded then
-    Result := NIL
+    Result :=nil
   else
   begin
     if Length(FCompleteFileFormats) = 0 then
@@ -2475,7 +2476,7 @@ var
   k, count: cint;
 begin
   if not FLibSndFileLibraryLoaded then
-    Result := NIL
+    Result :=nil
   else
   begin
     if Length(FSimplifiedFileFormats) = 0 then
@@ -2529,7 +2530,7 @@ end;
 
 function TALSManager.ListOfPlaybackOutputMode: TStringArray;
 begin
-  Result := Nil;
+  Result := nil;
   SetLength(Result, 7);
   Result[0] := 'ALC_SURROUND_5_1';
   Result[1] := 'ALC_SURROUND_6_1';
@@ -2555,7 +2556,7 @@ end;
 
 function TALSManager.ListOfMixMode: TStringArray;
 begin
-  Result := NIL;
+  Result := nil;
   SetLength(Result, 7);
   Result[0] := 'SURROUND 5.1';
   Result[1] := 'SURROUND 6.1';
@@ -2841,7 +2842,7 @@ procedure TALSPlaylist.LoadCurrentMusic;
 begin
   FreeCurrentMusic;
   try
-    FMusic := TALSStreamBufferSound.CreateFromFile(FParentContext, FList.Strings[FMusicIndex], False, NIL, NIL);
+    FMusic := TALSStreamBufferSound.CreateFromFile(FParentContext, FList.Strings[FMusicIndex], False,nil,nil);
   except
     FMusic.Free;
     FMusic := nil;
@@ -3052,8 +3053,8 @@ begin
   FOutputGain := 1.0;
   FMuteCoef := 1.0;
   FMute := False;
-  FPrevious := NIL;
-  FNext := NIL;
+  FPrevious := nil;
+  FNext := nil;
 end;
 
 procedure TALSEffect.InternalSetOutputGain;
@@ -3249,7 +3250,7 @@ end;
 
 function TALSEffect.IsInChain: Boolean;
 begin
-  Result := (FPrevious <> NIL) or (FNext <> NIL);
+  Result := (FPrevious <> nil) or (FNext <> nil);
 end;
 
 function TALSEffect.AllOtherChainedEffectAreMuted: Boolean;
@@ -3259,14 +3260,14 @@ begin
   Result := True;
 
   p := FPrevious;
-  while p <> NIL do
+  while p <> nil do
   begin
     Result := Result and p^.FMute;
     p := p^.FPrevious;
   end;
 
   p := FNext;
-  while p <> NIL do
+  while p <> nil do
   begin
     Result := Result and p^.FMute;
     p := p^.FNext;
@@ -3278,7 +3279,7 @@ var
   p: PALSEffect;
 begin
   p := @Self;
-  while p <> NIL do
+  while p <> nil do
   begin
     p^.FMuteCoef := 1.0;
     p^.InternalSetOutputGain;
@@ -3286,7 +3287,7 @@ begin
   end;
 
   p := FNext;
-  while p <> NIL do
+  while p <> nil do
   begin
     p^.FMuteCoef := 1.0;
     p^.InternalSetOutputGain;
@@ -3297,7 +3298,7 @@ end;
 function TALSEffect.FirstEffectInChain: PALSEffect;
 begin
   Result := @Self;
-  while Result^.FPrevious <> NIL do
+  while Result^.FPrevious <> nil do
     Result := Result^.FPrevious;
 end;
 
@@ -3306,7 +3307,7 @@ var
   p: PALSEffect;
 begin
   p := GetPreviousActiveEffect(aEffect);
-  if p <> NIL then
+  if p <> nil then
   begin
     aSlotID := p^.FSlotID;
     Result := True;
@@ -3320,7 +3321,7 @@ var
   p: PALSEffect;
 begin
   p := GetNextActiveEffect(aEffect);
-  if p <> NIL then
+  if p <> nil then
     Result := p^.FSlotID
   else
     Result := AL_EFFECTSLOT_NULL;
@@ -3329,7 +3330,7 @@ end;
 function TALSEffect.GetPreviousActiveEffect(aEffect: PALSEffect): PALSEffect;
 begin
   Result := aEffect;
-  while Result <> NIL do
+  while Result <> nil do
   begin
     if Result^.Ready and not Result^.Mute then
       exit
@@ -3341,7 +3342,7 @@ end;
 function TALSEffect.GetNextActiveEffect(aEffect: PALSEffect): PALSEffect;
 begin
   Result := aEffect;
-  while Result <> NIL do
+  while Result <> nil do
   begin
     if Result^.Ready and not Result^.Mute then
       exit
@@ -3358,7 +3359,7 @@ begin
   if FMute=AValue then Exit;
   FMute:=AValue;
 
-  if (FParentContext = NIL) or
+  if (FParentContext =nil) or
      not FReady then
     Exit;
   if FParentContext.Error or
@@ -3488,7 +3489,7 @@ begin
   aTargetEffect.FPrevious := @Self;
 
   Result := False;
-  if FParentContext = NIL then
+  if FParentContext = nil then
     Exit;
   if not FParentContext.FHaveExt_AL_SOFT_effect_target or
      FParentContext.Error then
@@ -3784,7 +3785,7 @@ begin
     if readCount < 1 then
       break;
 
-    if FOnCustomDSP <> NIL then
+    if FOnCustomDSP <> nil then
       FOnCustomDSP(Self, FBuffers[i], FOnCustomDSPUserData);
 
     // refill AL buffer with audio
@@ -3861,7 +3862,7 @@ begin
       if readCount > 0 then
       begin
         // callback custom DSP
-        if FOnCustomDSP <> NIL then
+        if FOnCustomDSP <> nil then
           FOnCustomDSP(Self, FBuffers[bufferIndex], FOnCustomDSPUserData);
         // refill the openAL buffer with...
         alBufferData(bufid, ALenum(FFormatForAL), FBuffers[bufferIndex].Data,
@@ -4035,7 +4036,7 @@ var
   i, levelCount: Integer;
   frameToRead, c, frameIndex: longword;
 begin
-  FLevels := NIL;
+  FLevels := nil;
 
   levelCount := Round(TotalDuration/LEVEL_TIME_SLICE) + 1;
   SetLength(FLevels, levelCount, aBuf.ChannelCount);
@@ -4080,7 +4081,7 @@ begin
       EnterCS;
       try
         i := Trunc(GetTimePosition/LEVEL_TIME_SLICE);
-        Result:= FLevels[i][index] * Volume.Value * FMuteMultiplicator;
+        Result := FLevels[i][index] * Volume.Value * FMuteMultiplicator;
       finally
         LeaveCS;
         UnlockContext;
@@ -4146,7 +4147,7 @@ begin
                 FFrameCount := frameRead;
                 FByteCount := frameRead*FFrameSize;
               end;
-              if FOnCustomDSP <> NIL then
+              if FOnCustomDSP <> nil then
                 FOnCustomDSP(Self, FBuffers[0], FOnCustomDSPUserData);
             end;
           end;
@@ -4233,7 +4234,7 @@ begin
             else
               dsp_FillWithWhiteNoise_Smallint(FBuffers[0].Data, FFrameCount, FBuffers[0].ChannelCount);
 
-            if FOnCustomDSP <> NIL then
+            if FOnCustomDSP <> nil then
               FOnCustomDSP(Self, FBuffers[0], FOnCustomDSPUserData);
 
             alBufferData(FBuffers[0].BufferID, FFormatForAL, FBuffers[0].Data, FByteCount, FSampleRate);
@@ -4321,7 +4322,7 @@ end;
 
 destructor TALSPlaybackContext.Destroy;
 begin
-  if FThread <> NIL then
+  if FThread <> nil then
   begin
     FThread.Terminate;
     FThread.WaitFor;
@@ -4430,7 +4431,7 @@ end;
 
 procedure TALSPlaybackContext.DoSoundOnStopped;
 begin
-  if FSoundToProcess.FOnStopped <> NIL then
+  if FSoundToProcess.FOnStopped <> nil then
     FSoundToProcess.FOnStopped(FSoundToProcess);
 end;
 
@@ -4528,14 +4529,14 @@ begin
     aEffect.DealocateALObjects;
 
     // Extract from effect's chain
-    if aEffect.FPrevious <> NIL then
+    if aEffect.FPrevious <> nil then
       aEffect.FPrevious^.FNext := aEffect.FNext;
 
-    if aEffect.FNext <> NIL then
+    if aEffect.FNext <> nil then
       aEffect.FNext^.FPrevious := aEffect.FPrevious;
 
-    aEffect.FPrevious := NIL;
-    aEffect.FNext := NIL;
+    aEffect.FPrevious := nil;
+    aEffect.FNext := nil;
 
   finally
     UnlockContext;
@@ -4689,7 +4690,7 @@ var
   num_hrtf: ALCint;
   i: Integer;
 begin
-  Result := NIL;
+  Result := nil;
   LockContext( FContext );
   try
     if Error or not FHaveExt_ALC_SOFT_HRTF then
@@ -4709,7 +4710,7 @@ end;
 function TALSPlaybackContext.GetResamplerList: TStringArray;
 var num_resamplers, i: ALint;
 begin
-  Result := NIL;
+  Result := nil;
   LockContext( FContext );
   try
     if FHaveExt_AL_SOFT_source_resampler then
@@ -4955,15 +4956,15 @@ begin
   FParentDeviceItem := PALSDeviceItem(aDevice);
   FObtainedSampleRate := aAttribs.SampleRate;
 
-  if aDevice = NIL then
+  if aDevice = nil then
     begin
-      FParentDevice := NIL;
+      FParentDevice := nil;
       SetError(als_ALTryToCreateContextOnNonExistentDevice)
     end
   else
     begin
       FParentDevice := aDevice^.Handle;
-      if aDevice^.Handle = NIL then
+      if aDevice^.Handle = nil then
         SetError(als_ALCanNotOpenPlaybackDevice)
       else
         InitializeALContext(aAttribs);
@@ -5270,7 +5271,7 @@ end;
 
 procedure TALSSound.InitializeErrorStatus;
 begin
-  if FParentContext <> NIL then
+  if FParentContext <> nil then
     FErrorCode := FParentContext.FErrorCode
   else
     FErrorCode := als_ALContextNotCreated;
@@ -5308,7 +5309,7 @@ var
   err: ALenum;
   i: Integer;
 begin
-  FBuffers := NIL;
+  FBuffers := nil;
   SetLength(FBuffers, aCount);
   for i := 0 to High(FBuffers) do
   begin
@@ -5685,7 +5686,7 @@ begin
     LeaveCriticalSection(FCriticalSection);;
   end;
 
-  if flagDoOnStopped and (FOnStopped <> NIL) then
+  if flagDoOnStopped and (FOnStopped <> nil) then
       FParentContext.FThread.Synchronize(FParentContext.FThread,
                                          @FParentContext.DoSoundOnStopped);
 end;
@@ -5777,7 +5778,7 @@ begin
     if aEffect.IsInChain then
       FAuxiliarySend[Result].FFirstChainedEffect := @aEffect
     else
-      FAuxiliarySend[Result].FFirstChainedEffect := NIL;
+      FAuxiliarySend[Result].FFirstChainedEffect := nil;
 
   finally
     LeaveCS;
@@ -5797,7 +5798,7 @@ begin
   EnterCS;
   try
     FAuxiliarySend[i].Disconnect;
-    FAuxiliarySend[i].FFirstChainedEffect := NIL;
+    FAuxiliarySend[i].FFirstChainedEffect := nil;
     if AllAuxiliarySendAreEmpty then
       FDirectFilter.GlobalGain := 1.0;
   finally
@@ -6140,7 +6141,7 @@ initialization
   {$ifdef ALS_ENABLE_CONTEXT_SWITCHING}
   InitCriticalSection( _CSLockContext{%H-} );
   {$endif}
-  ALSManager := NIL;
+  ALSManager := nil;
   ALSManager := TALSManager.Create;
 
 finalization

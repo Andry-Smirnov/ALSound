@@ -432,7 +432,7 @@ end;
 
 function TForm1.CaptureContextIsReady: Boolean;
 begin
-  Result := FCaptureContext <> NIL;
+  Result := FCaptureContext <> nil;
   if Result
     then Result := not FCaptureContext.Error;
 end;

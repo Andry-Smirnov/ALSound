@@ -857,7 +857,7 @@ end;
 
 procedure TForm1.TB5Change(Sender: TObject);
 begin
-  if FSound = NIL then Exit;
+  if FSound = nil then Exit;
 
   if PageControl1.ActivePage = PageAutoWah then
     FSound.SetAuxSendGain(FAutoWah, TB5.Position/TB5.Max);
@@ -900,7 +900,7 @@ end;
 
 procedure TForm1.ApplyEffectOnSound;
 begin
-  if FSound=NIL then Exit;
+  if FSound= nil then Exit;
 
   if not CheckBox1.Checked then
   begin

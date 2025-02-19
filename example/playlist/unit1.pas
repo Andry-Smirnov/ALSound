@@ -84,7 +84,7 @@ begin
   if FPlaybackContext.Error
     then ShowMessage(FPlaybackContext.StrError);
 
-  Timer1.Enabled:=TRUE;
+  Timer1.Enabled := True;
   Label3.Caption:='';
 end;
 
@@ -172,7 +172,7 @@ begin
    end;
 
   end;
-  Timer1.Enabled:=TRUE;
+  Timer1.Enabled := True;
 end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
