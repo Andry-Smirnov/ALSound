@@ -174,20 +174,22 @@ implementation
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
- if FSound = nil then Exit;
- FSound.Play;
- FSound.Volume.Value := ALS_VOLUME_MAX;
+  if FSound = nil then
+    Exit;
+  FSound.Play;
+  FSound.Volume.Value := ALS_VOLUME_MAX;
 end;
 
 procedure TForm1.BLoadClick(Sender: TObject);
 var
   s: string;
 begin
- if not OD1.Execute then Exit;
+  if not OD1.Execute then
+    Exit;
 
- UncheckAllEffects;
+  UncheckAllEffects;
 
- Label11.Caption := ExtractFileName( OD1.FileName );
+  Label11.Caption := ExtractFileName( OD1.FileName );
 
  // Free the old one
  if FSound <> nil then
@@ -217,25 +219,31 @@ end;
 
 procedure TForm1.BPauseClick(Sender: TObject);
 begin
- if FSound = nil then Exit;
- if FSound <> nil then FSound.Pause;
+  if FSound = nil then
+    Exit;
+  if FSound <> nil then
+    FSound.Pause;
 end;
 
 procedure TForm1.BStopClick(Sender: TObject);
 begin
- if FSound = nil then Exit;
- if FSound <> nil then FSound.Stop;
+  if FSound = nil then
+    Exit;
+  if FSound <> nil then
+    FSound.Stop;
 end;
 
 procedure TForm1.BFadeInClick(Sender: TObject);
 begin
- if FSound = nil then Exit;
- FSound.FadeIn( ALS_VOLUME_MAX, FSE1.Value, TALSCurveID(ComboBox1.ItemIndex) );
+  if FSound = nil then
+    Exit;
+  FSound.FadeIn( ALS_VOLUME_MAX, FSE1.Value, TALSCurveID(ComboBox1.ItemIndex) );
 end;
 
 procedure TForm1.BFadeOutClick(Sender: TObject);
 begin
-  if FSound = nil then Exit;
+  if FSound = nil then
+    Exit;
   FSound.FadeOut( FSE2.Value, TALSCurveID(ComboBox2.ItemIndex) );
 end;
 
@@ -246,7 +254,8 @@ end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
-  if FSound = nil then Exit;
+  if FSound = nil then
+   Exit;
   FSound.Loop := CheckBox1.Checked;
 end;
 
@@ -326,7 +335,8 @@ procedure TForm1.ComboBox1Change(Sender: TObject);
 var i: Integer;
 begin
   i := ComboBox1.ItemIndex;
-  if i = -1 then Exit;
+  if i = -1 then
+    Exit;
   ALSVelocityCurveList.GetCurveByIndex( i ).DrawOn( Image1 );
 end;
 
@@ -335,7 +345,8 @@ var
   i: Integer;
 begin
   i := ComboBox2.ItemIndex;
-  if i = -1 then Exit;
+  if i = -1 then
+    Exit;
   ALSVelocityCurveList.GetCurveByIndex( i ).DrawOn( Image2 );
 end;
 
@@ -436,28 +447,31 @@ end;
 
 procedure TForm1.BPanCenterClick(Sender: TObject);
 begin
-  TBPan.Position:=0;
+  TBPan.Position := 0;
 end;
 
 procedure TForm1.BMuteClick(Sender: TObject);
 begin
   case BMute.Tag of
-    0: begin
-      BMute.Tag:=1;
-      BMute.Color :=$0080FFFF;
-      if FSound <> NIl then FSound.Mute := TRUE;
-    end;
-    1: begin
-      BMute.Tag:=0;
-      BMute.Color :=$007D7D7D;
-      if FSound <> NIl then FSound.Mute:=FALSE;
-    end;
+    0:  begin
+          BMute.Tag:=1;
+          BMute.Color := $0080FFFF;
+          if FSound <> nil then
+            FSound.Mute := True;
+        end;
+    1:  begin
+          BMute.Tag := 0;
+          BMute.Color := $007D7D7D;
+          if FSound <> nil then
+            FSound.Mute := False;
+        end;
   end;
 end;
 
 procedure TForm1.TB1Change(Sender: TObject);
 begin
-  if FSound = NIl then Exit;
+  if FSound = nil then
+    Exit;
 
   if Sender=TB1 then // FSound.SetEffectDryWetVolume( FEAXReverb, TB1.Position/TB1.Max );
     FSound.SetAuxSendGain( FEAXReverb, TB1.Position/TB1.Max );
@@ -522,13 +536,15 @@ end;
 
 procedure TForm1.TBVolumeChange(Sender: TObject);
 begin
- if FSound = nil then Exit;
+ if FSound = nil then
+   Exit;
  FSound.Volume.Value := TBVolume.Position/TBVolume.Max;
 end;
 
 procedure TForm1.TBPitchChange(Sender: TObject);
 begin
- if FSound = nil then Exit;
+ if FSound = nil then
+   Exit;
  FSound.Pitch.Value := TBPitch.Position / 100;
  Label3.Caption := 'Pitch : ' + formatfloat('0.00', FSound.Pitch.Value);
 end;
@@ -536,7 +552,8 @@ end;
 procedure TForm1.TBPanChange(Sender: TObject);
 var v: single;
 begin
-  if FSound = nil then Exit;
+  if FSound = nil then
+    Exit;
   v:=TBPan.Position/TBPan.Max;
   FSound.Pan.Value:=v;
   Label12.Caption := 'Pan: ' + formatfloat('0.0', v);

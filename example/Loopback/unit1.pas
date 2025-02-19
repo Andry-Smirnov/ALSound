@@ -119,7 +119,8 @@ begin
   if FPlaybackContext <> nil then
     Exit;
 
-  if not OpenDialog1.Execute then Exit;
+  if not OpenDialog1.Execute then
+    Exit;
 
   i := TBitBtn(Sender).Tag;
 
@@ -139,12 +140,12 @@ begin
   if FLoopbackContext.Error then
     ShowMessage(FLoopbackContext.StrError)
   else
-  begin
-    if FLoopbackContext.IsAttributesSupported(GetSampleRate, GetChannel, GetSampleType) then
-      Label12.Caption := ' '
-    else
-      Label12.Caption := 'NOT SUPPORTED';
-  end;
+    begin
+      if FLoopbackContext.IsAttributesSupported(GetSampleRate, GetChannel, GetSampleType) then
+        Label12.Caption := ' '
+      else
+        Label12.Caption := 'NOT SUPPORTED';
+    end;
 
   FreeAndNil(FLoopbackContext);
 end;
@@ -204,14 +205,14 @@ begin
   FPlaybackContext := ALSManager.CreateDefaultPlaybackContext;
   // then adds the user's sounds
   for i := 0 to High(FTracks) do
-  begin
-    if FTracks[i].Filename <> '' then
     begin
-      FTracks[i].Sound := FPlaybackContext.AddStream(FTracks[i].Filename);
-      FTracks[i].Sound.Volume.Value := FTracks[i].Volume;
-      FTracks[i].Sound.Play(True);
+      if FTracks[i].Filename <> '' then
+        begin
+          FTracks[i].Sound := FPlaybackContext.AddStream(FTracks[i].Filename);
+          FTracks[i].Sound.Volume.Value := FTracks[i].Volume;
+          FTracks[i].Sound.Play(True);
+        end;
     end;
-  end;
 end;
 
 procedure TForm1.BStopClick(Sender: TObject);
@@ -245,20 +246,20 @@ begin
   // Creates a loopback context and checks error.
   FLoopbackContext := ALSManager.CreateDefaultLoopbackContext;
   if FLoopbackContext.Error then
-  begin
-    ShowMessage(FLoopbackContext.StrError);
-    FreeAndNil(FLoopbackContext);
-    Exit;
-  end;
+    begin
+      ShowMessage(FLoopbackContext.StrError);
+      FreeAndNil(FLoopbackContext);
+      Exit;
+    end;
 
   // Checks if the mixing format is supported.
   if not FLoopbackContext.IsAttributesSupported(GetSampleRate, GetChannel, GetSampleType) then
-  begin
-    ShowMessage('Current mixing format not supported'+lineending+
-                'Please, try different setting');
-    FreeAndNil(FLoopbackContext);
-    Exit;
-  end;
+    begin
+      ShowMessage('Current mixing format not supported'+lineending+
+                  'Please, try different setting');
+      FreeAndNil(FLoopbackContext);
+      Exit;
+    end;
 
 
   EnableMixGUI(False); // Avoid any user's interaction.
@@ -276,16 +277,16 @@ begin
   // Only sounds in playing state will be mixed.
   for i := 0 to High(FTracks) do
     if FTracks[i].Filename <> '' then
-    begin
-      FTracks[i].Sound := FLoopbackContext.AddStream(FTracks[i].Filename);
-      with FTracks[i].Sound do
       begin
-        if Error then
-          ShowMessage(FTracks[i].Filename+lineending+StrError);
-        Volume.Value := FTracks[i].Volume;
-        Play(True);
+        FTracks[i].Sound := FLoopbackContext.AddStream(FTracks[i].Filename);
+        with FTracks[i].Sound do
+          begin
+            if Error then
+              ShowMessage(FTracks[i].Filename+lineending+StrError);
+            Volume.Value := FTracks[i].Volume;
+            Play(True);
+          end;
       end;
-    end;
 
   // Prepare output file name with path and '.wav' extension.
   outputFilename := ChangeFileExt(Edit1.Text, '.wav');
@@ -302,12 +303,12 @@ begin
   // Asks the context to save audio to the output file. Shows an error message
   // in case of failure and cancel operation.
   if not FLoopbackContext.PrepareSavingToFile(outputFilename, fileFormat) then
-  begin
-    ShowMessage('Can not create output file' + LineEnding + outputFilename);
-    FreeAndNil(FLoopbackContext);
-    EnableMixGUI(True);
-    Exit;
-  end;
+    begin
+      ShowMessage('Can not create output file' + LineEnding + outputFilename);
+      FreeAndNil(FLoopbackContext);
+      EnableMixGUI(True);
+      Exit;
+    end;
 
   // Define a callback to update our progress bar, vu-meters and controls the
   // mixing process. This callback will be fired each time a buffer is
@@ -319,25 +320,25 @@ begin
   // We have to call this method before render audio.
   FLoopbackContext.BeginOfMix;
 
-     repeat
-       // Ask the context to render 10Ms of audio.
-       FLoopbackContext.Mix(0.010);
-      until (FMixingTime >= FloatSpinEdit2.Value) or // mixing time reach the end of the interval
-            FCanceled;                               // user click cancel button
+  repeat
+    // Ask the context to render 10Ms of audio.
+    FLoopbackContext.Mix(0.010);
+  until (FMixingTime >= FloatSpinEdit2.Value) or // mixing time reach the end of the interval
+        FCanceled;                               // user click cancel button
 
   // We have to call this method at the end, to finalize the mixing process.
   FLoopbackContext.EndOfMix;
 
   // Checks error only if the mix was not canceled
   if not FCanceled then
-  begin
-    // Check mixing error
-    if FLoopbackContext.MixingError then
-      Showmessage(FLoopbackContext.MixingStrError)
-    else
-      ShowMessage('Mixdown saved to' + lineending +
-                  outputFilename + lineending + 'WITH SUCCESS');
-  end;
+    begin
+      // Check mixing error
+      if FLoopbackContext.MixingError then
+        Showmessage(FLoopbackContext.MixingStrError)
+      else
+        ShowMessage('Mixdown saved to' + lineending +
+                    outputFilename + lineending + 'WITH SUCCESS');
+    end;
 
   // Free loopback context (and loopback device)
   FreeAndNil(FLoopbackContext);
@@ -369,10 +370,10 @@ var
   i: Integer;
 begin
   for i := 0 to High(FTracks) do
-  begin
-    FTracks[i].Sound := nil;
-    FTracks[i].Volume := ALS_VOLUME_MAX;
-  end;
+    begin
+      FTracks[i].Sound := nil;
+      FTracks[i].Volume := ALS_VOLUME_MAX;
+    end;
   FTracks[0].LabelFilename := Label1;
   FTracks[1].LabelFilename := Label2;
   FTracks[2].LabelFilename := Label3;
@@ -442,7 +443,7 @@ begin
   FMixingTime := aTimePos;
 
   // update the progress bar according to the current mixing time position
-  ProgressBar1.Position := Round(ProgressBar1.Max*aTimePos/FloatSpinEdit2.Value);
+  ProgressBar1.Position := Round(ProgressBar1.Max * aTimePos / FloatSpinEdit2.Value);
 
   // Compute channels level (and peak)
   aFrameBuffer.ComputeChannelsLevel;

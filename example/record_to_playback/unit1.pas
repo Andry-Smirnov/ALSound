@@ -249,7 +249,7 @@ begin
   Timer1.Enabled := True;
   BStart.Enabled := False;
   BStop.Enabled := True;
-  Panel1.Enabled := FALSE;
+  Panel1.Enabled := False;
   Panel2.Enabled := True;
 end;
 
@@ -433,8 +433,8 @@ end;
 function TForm1.CaptureContextIsReady: Boolean;
 begin
   Result := FCaptureContext <> nil;
-  if Result
-    then Result := not FCaptureContext.Error;
+  if Result then
+    Result := not FCaptureContext.Error;
 end;
 
 procedure TForm1.UpdateWidgets;
@@ -455,7 +455,7 @@ begin
   end
   else
   begin
-    Label2.Visible := FALSE;
+    Label2.Visible := False;
     Label3.Caption := '';
   end;
 

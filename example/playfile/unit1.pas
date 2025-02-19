@@ -131,7 +131,8 @@ procedure TForm1.BLoadClick(Sender: TObject);
 var
   s: string;
 begin
-  if not OD1.Execute then Exit;
+  if not OD1.Execute then
+    Exit;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 
@@ -164,7 +165,8 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = nil then Exit;
+  if FSound = nil then
+    Exit;
 
   if Sender = BPlay then
     FSound.Play(True);

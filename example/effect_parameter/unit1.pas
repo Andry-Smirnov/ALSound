@@ -454,31 +454,32 @@ end;
 
 procedure TForm1.PageControl1Change(Sender: TObject);
 begin
-  if FSound<>NIL then
+  if FSound <> nil then
     FSound.RemoveAllEffects;
   ApplyEffectOnSound;
 end;
 
 procedure TForm1.SpeedButton1Click(Sender: TObject);
 begin
-  if FSound<>NIL then
+  if FSound <> nil then
     FSound.Play;
 end;
 
 procedure TForm1.SpeedButton2Click(Sender: TObject);
 begin
-  if FSound<>NIL then
+  if FSound <> nil then
     FSound.Pause;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  if not OpenDialog1.Execute then Exit;
+  if not OpenDialog1.Execute then
+    Exit;
 
   Label1.Caption := ExtractFileName(OpenDialog1.FileName);
 
   // kill the previous sound
-  if FSound<>NIL then
+  if FSound <> nil then
     FSound.FadeOutThenKill( 2.0 );
 
   // create the new one, enable loop mode and playback with smooth fadein
@@ -491,7 +492,8 @@ end;
 
 procedure TForm1.TB1Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FAutoWahProp.AttackTime := 0.0001+(1.0-0.0001)*TB1.Position/TB1.Max;
   FAutoWahProp.ReleaseTime := 0.0001+(1.0-0.0001)*TB2.Position/TB2.Max;
   FAutoWahProp.Resonance := 2.0+(1000.0-2.0)*TB3.Position/TB3.Max;
@@ -505,7 +507,8 @@ end;
 
 procedure TForm1.TB7Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FChorusProp.Waveform := TALSChorusWaveform(ComboBox1.ItemIndex);
   FChorusProp.Phase := Round(-180+(180--180)*TB7.Position/TB7.Max);
   FChorusProp.Rate := 10.0*TB8.Position/TB8.Max;
@@ -521,7 +524,8 @@ end;
 
 procedure TForm1.TB12Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FFlangerProp.Waveform := TALSFlangerWaveform(ComboBox2.ItemIndex);
   FFlangerProp.Phase := Round(-180+(180--180)*TB12.Position/TB12.Max);
   FFlangerProp.Rate := 10.0*TB13.Position/TB13.Max;
@@ -537,7 +541,8 @@ end;
 
 procedure TForm1.TB17Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FDistortionProp.Edge := TB17.Position/TB17.Max;
   FDistortionProp.Gain := 0.01+(1.0-0.01)*TB18.Position/TB18.Max;
   FDistortionProp.LowpassCutoff := 80.0+(24000.0-80.0)*TB19.Position/TB19.Max;
@@ -552,7 +557,8 @@ end;
 
 procedure TForm1.TB22Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FEchoProp.Delay := 0.207*TB22.Position/TB22.Max;
   FEchoProp.LRDelay := 0.404*TB23.Position/TB23.Max;
   FEchoProp.Damping := 0.99*TB24.Position/TB24.Max;
@@ -567,7 +573,8 @@ end;
 
 procedure TForm1.TB27Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FEqualizerProp.LowGain := 0.126+(7.943-0.126)*TB27.Position/TB27.Max;
   FEqualizerProp.LowCutoff := 50.0+(800.0-50.0)*TB28.Position/TB28.Max;
   FEqualizerProp.Mid1Gain := 0.126+(7.943-0.126)*TB29.Position/TB29.Max;
@@ -589,7 +596,8 @@ procedure TForm1.TB37Change(Sender: TObject);
 var
   f: single;
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   if RadioButton1.Checked then
     f := 500.0
   else if RadioButton2.Checked then
@@ -621,7 +629,8 @@ procedure TForm1.TB40Change(Sender: TObject);
 var
   f: single;
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   if RadioButton4.Checked then
     f := 100.0
   else if RadioButton5.Checked then
@@ -640,7 +649,8 @@ end;
 
 procedure TForm1.TB42Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FVocalMorpherProp.PhonemeA := TALSVMorpherPhoneme(ComboBox6.ItemIndex);
   FVocalMorpherProp.PhonemeB := TALSVMorpherPhoneme(ComboBox7.ItemIndex);
   FVocalMorpherProp.PhonemeACoarseTuning := TB42.Position;
@@ -656,7 +666,8 @@ end;
 
 procedure TForm1.TB45Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then
+    Exit;
   FReverbProp.Density := TB45.Position/TB45.Max;
   FReverbProp.Diffusion := TB46.Position/TB46.Max;
   FReverbProp.Gain := TB47.Position/TB47.Max;
@@ -857,7 +868,8 @@ end;
 
 procedure TForm1.TB5Change(Sender: TObject);
 begin
-  if FSound = nil then Exit;
+  if FSound = nil then
+    Exit;
 
   if PageControl1.ActivePage = PageAutoWah then
     FSound.SetAuxSendGain(FAutoWah, TB5.Position/TB5.Max);
@@ -900,7 +912,8 @@ end;
 
 procedure TForm1.ApplyEffectOnSound;
 begin
-  if FSound= nil then Exit;
+  if FSound = nil then
+    Exit;
 
   if not CheckBox1.Checked then
   begin

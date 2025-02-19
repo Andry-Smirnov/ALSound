@@ -116,13 +116,17 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := nil;
-  if aChannelCount = 0 then Exit;
-  if aFrameCount = 0 then Exit;
+  if aChannelCount = 0 then
+    Exit;
+  if aFrameCount = 0 then
+    Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
-  while aFrameCount > 0 do begin
+  while aFrameCount > 0 do
+  begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do begin
+    for ichan:=0 to aChannelCount - 1 do
+    begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -138,13 +142,17 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := nil;
-  if aChannelCount = 0 then Exit;
-  if aFrameCount = 0 then Exit;
+  if aChannelCount = 0 then
+    Exit;
+  if aFrameCount = 0 then
+    Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
-  while aFrameCount > 0 do begin
+  while aFrameCount > 0 do
+  begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do begin
+    for ichan:=0 to aChannelCount - 1 do
+    begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -160,14 +168,18 @@ var ichan: Integer;
   isamp: longword;
 begin
   Result := nil;
-  if aChannelCount <= 0 then Exit;
-  if aFrameCount <= 0 then Exit;
+  if aChannelCount <= 0 then
+    Exit;
+  if aFrameCount <= 0 then
+    Exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
 
-  while aFrameCount > 0 do begin
+  while aFrameCount > 0 do
+  begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do begin
+    for ichan:=0 to aChannelCount - 1 do
+    begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -183,7 +195,8 @@ var
   samp, chan: Integer;
 begin
   for samp:=0 to High(A[0]) do
-   for chan:=0 to High(A) do begin
+   for chan:=0 to High(A) do
+   begin
     p^ := A[chan, samp];
     inc(p);
    end;
@@ -194,7 +207,8 @@ var
   samp, chan: Integer;
 begin
   for samp:=0 to High(A[0]) do
-   for chan:=0 to High(A) do begin
+   for chan:=0 to High(A) do
+   begin
     p^ := A[chan, samp];
     inc(p);
    end;
@@ -204,8 +218,9 @@ procedure SplittedToInterleaved_Double(const A: TSplittedChannelsDouble; p: PDou
 var
   samp, chan: Integer;
 begin
-  for samp:=0 to High(A[0]) do
-   for chan:=0 to High(A) do begin
+  for samp := 0 to High(A[0]) do
+   for chan := 0 to High(A) do
+   begin
     p^ := A[chan, samp];
     inc(p);
    end;
@@ -215,7 +230,7 @@ procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: Integer);
 var
   i: Integer;
 begin
-  for i:=1 to aCount do
+  for i := 1 to aCount do
   begin
     if p^ > 0.0 then
       p^ := Min(20*Log10( p^ ), ALS_DECIBEL_MIN_VALUE)
@@ -332,7 +347,7 @@ var
   tar: PSingle;
 begin
   tar := aTarget;
-  for i:=1 to aChannelCount do
+  for i := 1 to aChannelCount do
   begin
     tar^ := 0.0;
     inc(tar);
@@ -345,7 +360,7 @@ begin
   while aFrameCount > 0 do
   begin
     tar := aTarget;
-    for i:=1 to aChannelCount do
+    for i := 1 to aChannelCount do
     begin
       if tar^ < Abs(p^) then
          tar^ := Abs(p^);
@@ -356,7 +371,7 @@ begin
   end;
   // rms
   tar := aTarget;
-  for i:=1 to aChannelCount do
+  for i := 1 to aChannelCount do
   begin
     tar^ := tar^ / 32767;
     inc(tar);
@@ -370,7 +385,7 @@ var
   tar: PSingle;
 begin
   tar := aTarget;
-  for i:=1 to aChannelCount do
+  for i := 1 to aChannelCount do
   begin
     tar^ := 0.0;
     inc(tar);
@@ -383,7 +398,7 @@ begin
   while aFrameCount > 0 do
   begin
     tar := aTarget;
-    for i:=1 to aChannelCount do
+    for i := 1 to aChannelCount do
     begin
       if tar^ < Abs(p^) then
          tar^ := Abs(p^);
@@ -394,7 +409,7 @@ begin
   end;
 
   tar := aTarget;
-  for i:=1 to aChannelCount do
+  for i := 1 to aChannelCount do
   begin
     if tar^ > 1.0 then
       tar^ := 1.0;

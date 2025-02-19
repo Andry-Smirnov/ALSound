@@ -166,17 +166,17 @@ begin
   if not res then
     ShowMessage(UserFile + LINEENDING + FCaptureContext.StrCaptureError)
   else
-  begin
-    // No error -> we can start the capture
-    FCaptureContext.StartCapture;
-    Label3.Tag := 0;
-    Label3.Caption := 'Recording';
-    Timer1.Enabled := True;
-    BStart.Enabled := False;
-    BStop.Enabled := True;
-    Panel1.Enabled := FALSE;
-    Panel2.Enabled := FALSE;
-  end;
+    begin
+      // No error -> we can start the capture
+      FCaptureContext.StartCapture;
+      Label3.Tag := 0;
+      Label3.Caption := 'Recording';
+      Timer1.Enabled := True;
+      BStart.Enabled := False;
+      BStop.Enabled := True;
+      Panel1.Enabled := False;
+      Panel2.Enabled := False;
+    end;
 end;
 
 procedure TForm1.BStopClick(Sender: TObject);
@@ -205,14 +205,14 @@ begin
   Timer1.Enabled := False;
 
   case Label3.Tag of
-    0: begin
-      Label3.Tag := 1;
-      Label3.Caption := 'Recording';
-    end;
-    1: begin
-      Label3.Tag := 0;
-      Label3.Caption := '';
-    end;
+    0:  begin
+          Label3.Tag := 1;
+          Label3.Caption := 'Recording';
+        end;
+    1:  begin
+          Label3.Tag := 0;
+          Label3.Caption := '';
+        end;
   end;
 
   Timer1.Enabled := True;
@@ -221,8 +221,8 @@ end;
 function TForm1.CaptureContextIsReady: Boolean;
 begin
   Result := FCaptureContext <> nil;
-  if Result
-    then Result := not FCaptureContext.Error;
+  if Result then
+    Result := not FCaptureContext.Error;
 end;
 
 function TForm1.FileParametersAreReady: Boolean;
@@ -259,7 +259,7 @@ begin
   end
   else
   begin
-    Label2.Visible := FALSE;
+    Label2.Visible := False;
     Label3.Caption := '';
   end;
 
