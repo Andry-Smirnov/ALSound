@@ -1,7 +1,6 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -197,7 +196,7 @@ end;
 
 procedure TForm1.SetSoundsAttenuation;
 var
-  m: Integer;
+  m: integer;
 begin
   m := Max( Width, Height );
 

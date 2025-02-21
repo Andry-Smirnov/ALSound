@@ -24,8 +24,7 @@
 
 unit openalsoft;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 {$PACKRECORDS C}
 {$MODESWITCH ADVANCEDRECORDS}
 
@@ -70,26 +69,26 @@ const
 {$include efx.inc}
 
 
-function LoadOpenALCoreLibrary( const aFilename: string ): Boolean;
+function LoadOpenALCoreLibrary( const aFilename: string ): boolean;
 procedure UnloadOpenALSoftLibrary;
 
 // Device dependant extensions
-function LoadExt_ALC_EXT_thread_local_context(aDevice: PALCDevice): Boolean;
-function LoadExt_ALC_SOFT_loopback(aDevice: PALCDevice): Boolean;
-function LoadExt_ALC_SOFT_pause_device(aDevice: PALCDevice): Boolean;
-function LoadExt_ALC_SOFT_HRTF(aDevice: PALCDevice): Boolean;             // loaded in playback/loopback context
-function LoadExt_ALC_SOFT_device_clock(aDevice: PALCDevice): Boolean;
-function LoadExt_ALC_SOFT_reopen_device(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_EXT_thread_local_context(aDevice: PALCDevice): boolean;
+function LoadExt_ALC_SOFT_loopback(aDevice: PALCDevice): boolean;
+function LoadExt_ALC_SOFT_pause_device(aDevice: PALCDevice): boolean;
+function LoadExt_ALC_SOFT_HRTF(aDevice: PALCDevice): boolean;             // loaded in playback/loopback context
+function LoadExt_ALC_SOFT_device_clock(aDevice: PALCDevice): boolean;
+function LoadExt_ALC_SOFT_reopen_device(aDevice: PALCDevice): boolean;
 
 // Other extensions
-function LoadExt_ALC_EXT_EFX: Boolean; // loaded in playback/loopback context
-function LoadExt_AL_SOFT_buffer_samples: Boolean;
-function LoadExt_AL_SOFT_buffer_sub_data: Boolean;
-function LoadExt_AL_SOFT_callback_buffer: Boolean;
-function LoadExt_AL_SOFT_source_latency: Boolean;
-function LoadExt_AL_SOFT_deferred_updates: Boolean;  // loaded in playback/loopback context
-function LoadExt_AL_SOFT_source_resampler: Boolean;  // loaded in playback/loopback context
-function LoadExt_AL_SOFT_events: Boolean;
+function LoadExt_ALC_EXT_EFX: boolean; // loaded in playback/loopback context
+function LoadExt_AL_SOFT_buffer_samples: boolean;
+function LoadExt_AL_SOFT_buffer_sub_data: boolean;
+function LoadExt_AL_SOFT_callback_buffer: boolean;
+function LoadExt_AL_SOFT_source_latency: boolean;
+function LoadExt_AL_SOFT_deferred_updates: boolean;  // loaded in playback/loopback context
+function LoadExt_AL_SOFT_source_resampler: boolean;  // loaded in playback/loopback context
+function LoadExt_AL_SOFT_events: boolean;
 
 // some functions to ease things
 function GetDeviceNames: TStringArray;
@@ -104,18 +103,18 @@ function GetALExtension: TStringArray;
 function StringToNullTerminated(const s: string): PChar;
 
 var
-  FLoaded_OpenALCore_: Boolean = False;
-  FExtensionLoaded_ALC_EXT_EFX: Boolean = False;
-  FExtensionLoaded_AL_SOFT_buffer_samples: Boolean = False;
-  FExtensionLoaded_AL_SOFT_buffer_sub_data: Boolean = False;
-  FExtensionLoaded_AL_SOFT_callback_buffer: Boolean = False;
-  FExtensionLoaded_AL_SOFT_source_latency: Boolean = False;
-  FExtensionLoaded_AL_SOFT_deferred_updates: Boolean = False;
-  FExtensionLoaded_AL_SOFT_source_resampler: Boolean = False;
-  FExtensionLoaded_AL_SOFT_events: Boolean = False;
+  FLoaded_OpenALCore_: boolean=False;
+  FExtensionLoaded_ALC_EXT_EFX: boolean=False;
+  FExtensionLoaded_AL_SOFT_buffer_samples: boolean=False;
+  FExtensionLoaded_AL_SOFT_buffer_sub_data: boolean=False;
+  FExtensionLoaded_AL_SOFT_callback_buffer: boolean=False;
+  FExtensionLoaded_AL_SOFT_source_latency: boolean=False;
+  FExtensionLoaded_AL_SOFT_deferred_updates: boolean=False;
+  FExtensionLoaded_AL_SOFT_source_resampler: boolean=False;
+  FExtensionLoaded_AL_SOFT_events: boolean=False;
 
 
-function SetALSoft_LogCallback(aCallback: TALSoft_LogCallback; aUserPtr: pointer): Boolean;
+function SetALSoft_LogCallback(aCallback: TALSoft_LogCallback; aUserPtr: pointer): boolean;
 
 implementation
 
@@ -124,29 +123,29 @@ var
   _OpenALLib_Handle: TLibHandle = dynlibs.NilHandle;
 
 
-function GetCoreProc(const aName: string; var aFlag: Boolean): Pointer;
+function GetCoreProc(const aName: string; var aFlag: boolean): Pointer;
 begin
   Result := DynLibs.GetProcedureAddress(_OpenALLib_Handle, PChar(aName));
   aFlag := aFlag and (Result <> nil);
 end;
 
-function GetALExtProc(const aName: string; var aFlag: Boolean): Pointer;
+function GetALExtProc(const aName: string; var aFlag: boolean): Pointer;
 begin
   Result := alGetProcAddress(PChar(aName));
   aFlag := aFlag and (Result <> nil);
 end;
 
-function GetALCExtProc(aDevice: PALCDevice; const aName: string; var aFlag: Boolean): Pointer;
+function GetALCExtProc(aDevice: PALCDevice; const aName: string; var aFlag: boolean): Pointer;
 begin
-  Result := nil;
+  Result := NIL;
   if FLoaded_OpenALCore_ then
     Result := alcGetProcAddress(aDevice, PChar(aName));
   aFlag := aFlag and (Result <> nil);
 end;
 
-function LoadOpenALCoreLibrary( const aFilename: string ): Boolean;
+function LoadOpenALCoreLibrary( const aFilename: string ): boolean;
 var
-  f: UnicodeString;
+  f: string;
 begin
   if _OpenALLib_Handle <> dynlibs.NilHandle then
   begin
@@ -154,12 +153,10 @@ begin
     Result := FLoaded_OpenALCore_;
   end;
 
-  if Length(aFilename) = 0 then
-    f := UnicodeString( OPENAL_LIBNAME )
-  else
-    f := UnicodeString( aFilename );
-  _OpenALLib_Handle := DynLibs.SafeLoadLibrary( f );
+  if Length(aFilename) = 0 then f := OPENAL_LIBNAME
+    else f := aFilename;
 
+  _OpenALLib_Handle := DynLibs.SafeLoadLibrary(f);
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FLoaded_OpenALCore_ := True;
@@ -290,13 +287,13 @@ begin
   Result := FLoaded_OpenALCore_;
 end;
 
-function LoadExt_ALC_EXT_EFX: Boolean;
+function LoadExt_ALC_EXT_EFX: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_ALC_EXT_EFX;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_ALC_EXT_EFX := True;
@@ -341,10 +338,10 @@ begin
     Result := False;
 end;
 
-function LoadExt_ALC_EXT_thread_local_context(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_EXT_thread_local_context(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(NIL, PChar('ALC_EXT_thread_local_context'));
   if Result then
@@ -354,18 +351,18 @@ begin
   end
   else
   begin
-    alcSetThreadContext := nil;
-    alcGetThreadContext := nil;
+    alcSetThreadContext := NIL;
+    alcGetThreadContext := NIL;
   end;
 end;
 
-function LoadExt_AL_SOFT_buffer_samples: Boolean;
+function LoadExt_AL_SOFT_buffer_samples: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_buffer_samples;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_buffer_samples := True;
@@ -380,13 +377,13 @@ begin
     Result := False;
 end;
 
-function LoadExt_AL_SOFT_buffer_sub_data: Boolean;
+function LoadExt_AL_SOFT_buffer_sub_data: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_buffer_sub_data;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_buffer_sub_data := True;
@@ -397,13 +394,13 @@ begin
     Result := False;
 end;
 
-function LoadExt_AL_SOFT_callback_buffer: Boolean;
+function LoadExt_AL_SOFT_callback_buffer: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_callback_buffer;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_callback_buffer := True;
@@ -417,10 +414,10 @@ begin
     Result := False;
 end;
 
-function LoadExt_ALC_SOFT_loopback(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_SOFT_loopback(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(aDevice, PChar('ALC_SOFT_loopback'));
   if Result then
@@ -431,19 +428,19 @@ begin
   end
   else
   begin
-    alcLoopbackOpenDeviceSOFT := nil;
-    alcIsRenderFormatSupportedSOFT := nil;
-    alcRenderSamplesSOFT := nil;
+    alcLoopbackOpenDeviceSOFT := NIL;
+    alcIsRenderFormatSupportedSOFT := NIL;
+    alcRenderSamplesSOFT := NIL;
   end;
 end;
 
-function LoadExt_AL_SOFT_source_latency: Boolean;
+function LoadExt_AL_SOFT_source_latency: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_source_latency;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_source_latency := True;
@@ -465,13 +462,13 @@ begin
     Result := False;
 end;
 
-function LoadExt_AL_SOFT_deferred_updates: Boolean;
+function LoadExt_AL_SOFT_deferred_updates: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_deferred_updates;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_deferred_updates := True;
@@ -483,10 +480,10 @@ begin
     Result := False;
 end;
 
-function LoadExt_ALC_SOFT_pause_device(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_SOFT_pause_device(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(NIL, PChar('ALC_SOFT_pause_device'));
   if Result then
@@ -496,15 +493,15 @@ begin
   end
   else
   begin
-    alcDevicePauseSOFT := nil;
-    alcDeviceResumeSOFT := nil;
+    alcDevicePauseSOFT := NIL;
+    alcDeviceResumeSOFT := NIL;
   end;
 end;
 
-function LoadExt_ALC_SOFT_HRTF(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_SOFT_HRTF(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(aDevice, PChar('ALC_SOFT_HRTF'));
   if Result then
@@ -514,21 +511,21 @@ begin
   end
   else
   begin
-    alcGetStringiSOFT := nil;
-    alcResetDeviceSOFT := nil;
+    alcGetStringiSOFT := NIL;
+    alcResetDeviceSOFT := NIL;
   end;
 end;
 
-function LoadExt_AL_SOFT_source_resampler: Boolean;
+function LoadExt_AL_SOFT_source_resampler: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_source_resampler;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
-    FExtensionLoaded_AL_SOFT_source_resampler := True;
+    FExtensionLoaded_AL_SOFT_source_resampler := true;
     Pointer(alGetStringiSOFT) := GetALExtProc('alGetStringiSOFT', FExtensionLoaded_AL_SOFT_source_resampler);
     Result := FExtensionLoaded_AL_SOFT_source_resampler;
   end
@@ -536,10 +533,10 @@ begin
     Result := False;
 end;
 
-function LoadExt_ALC_SOFT_device_clock(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_SOFT_device_clock(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(NIL, PChar('ALC_SOFT_device_clock'));
   if Result then
@@ -548,17 +545,17 @@ begin
   end
   else
   begin
-    alcGetInteger64vSOFT := nil;
+    alcGetInteger64vSOFT := NIL;
   end;
 end;
 
-function LoadExt_AL_SOFT_events: Boolean;
+function LoadExt_AL_SOFT_events: boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := FExtensionLoaded_AL_SOFT_events;
-  if Result then Exit;
+  if Result then exit;
   if _OpenALLib_Handle <> DynLibs.NilHandle then
   begin
     FExtensionLoaded_AL_SOFT_events := True;
@@ -572,10 +569,10 @@ begin
     Result := False;
 end;
 
-function LoadExt_ALC_SOFT_reopen_device(aDevice: PALCDevice): Boolean;
+function LoadExt_ALC_SOFT_reopen_device(aDevice: PALCDevice): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := alcIsExtensionPresent(NIL, PChar('ALC_SOFT_reopen_device'));
   if Result then
@@ -584,7 +581,7 @@ begin
   end
   else
   begin
-    alcReopenDeviceSOFT := nil;
+    alcReopenDeviceSOFT := NIL;
   end;
 end;
 
@@ -597,7 +594,7 @@ begin
   if _OpenALLib_ReferenceCounter > 0 then
     Dec(_OpenALLib_ReferenceCounter);
   if _OpenALLib_ReferenceCounter > 0 then
-    Exit;
+    exit;
 
   if _OpenALLib_Handle <> dynlibs.NilHandle then
   begin
@@ -618,7 +615,7 @@ begin
   Result := nil;
   SetLength(Result, 0);
   if p = nil then
-    Exit;
+    exit;
   repeat
     s := '';
     while p^ <> #0 do
@@ -633,7 +630,7 @@ begin
       Inc(p);
     end
     else
-      Exit;
+      exit;
   until False;
 end;
 
@@ -641,8 +638,8 @@ function GetDeviceNames: TStringArray;
 var
   s: PChar;
 begin
-  Result := nil;
-  if not FLoaded_OpenALCore_ then Exit;
+  Result := NIL;
+  if not FLoaded_OpenALCore_ then exit;
 
   if alcIsExtensionPresent(nil, PChar('ALC_ENUMERATE_ALL_EXT')) then
     s := alcGetString(nil, ALC_ALL_DEVICES_SPECIFIER)
@@ -655,8 +652,8 @@ function GetCaptureDeviceNames: TStringArray;
 var
   s: PChar;
 begin
-  Result := nil;
-  if not FLoaded_OpenALCore_ then Exit;
+  Result := NIL;
+  if not FLoaded_OpenALCore_ then exit;
 
   s := alcGetString(nil, ALC_CAPTURE_DEVICE_SPECIFIER);
   Result := OALMultiStringToStringArray(s);
@@ -665,7 +662,7 @@ end;
 function GetDefaultDeviceName: string;
 begin
   Result := '';
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   if alcIsExtensionPresent(nil, PChar('ALC_ENUMERATE_ALL_EXT')) then
     Result := StrPas(alcGetString(nil, ALC_DEFAULT_ALL_DEVICES_SPECIFIER))
@@ -676,7 +673,7 @@ end;
 function GetDefaultCaptureDeviceName: string;
 begin
   Result := '';
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := StrPas(alcGetString(nil, ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER));
 end;
@@ -685,8 +682,8 @@ function ListOfContextExtension(aDevice: PALCDevice): TStringArray;
 var
   s: string;
 begin
-  Result := nil;
-  if not FLoaded_OpenALCore_ then Exit;
+  Result := NIL;
+  if not FLoaded_OpenALCore_ then exit;
 
   s := StrPas(alcGetString(aDevice, ALC_EXTENSIONS));
   if Length(s) = 0 then
@@ -699,8 +696,8 @@ function GetALExtension: TStringArray;
 var
   s: string;
 begin
-  Result := nil;
-  if not FLoaded_OpenALCore_ then Exit;
+  Result := NIL;
+  if not FLoaded_OpenALCore_ then exit;
 
   s := StrPas(alGetString(AL_EXTENSIONS));
   if Length(s) = 0 then
@@ -714,10 +711,10 @@ begin
   Result := PChar(s + #0);
 end;
 
-function SetALSoft_LogCallback(aCallback: TALSoft_LogCallback; aUserPtr: pointer): Boolean;
+function SetALSoft_LogCallback(aCallback: TALSoft_LogCallback; aUserPtr: pointer): boolean;
 begin
   Result := False;
-  if not FLoaded_OpenALCore_ then Exit;
+  if not FLoaded_OpenALCore_ then exit;
 
   Result := True;
   Pointer(alsoft_set_log_callback) := GetALCExtProc(NIL, 'alsoft_set_log_callback', Result);

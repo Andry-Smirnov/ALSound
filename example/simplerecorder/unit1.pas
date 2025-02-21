@@ -1,7 +1,6 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -47,7 +46,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure ListBox1SelectionChange(Sender: TObject; User: Boolean);
+    procedure ListBox1SelectionChange(Sender: TObject; User: boolean);
     procedure BStartClick(Sender: TObject);
     procedure BStopClick(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -57,8 +56,8 @@ type
     FCaptureContext: TALSCaptureContext;
     FFileFormat: longint;
     FFileExt: string;
-    function CaptureContextIsReady: Boolean;
-    function FileParametersAreReady: Boolean;
+    function CaptureContextIsReady: boolean;
+    function FileParametersAreReady: boolean;
     function UserFile: string;
     procedure UpdateWidgets;
     procedure ProcessOnCaptureBuffer(Sender: TALSCaptureContext;
@@ -99,7 +98,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 var
   A: TStringArray;
-  i: Integer;
+  i: integer;
   F: ArrayOfALSSimplifiedAudioFileFormat;
 begin
   // Check if ALSManager encounter an error while loading OpenAL-Soft and LibSndFile
@@ -116,7 +115,7 @@ begin
   F := ALSManager.ListOfAudioFileFormat_Simplified;
   ListBox1.Clear;
   for i := 0 to High(F) do
-    ListBox1.Items.Add(F[i].Name + ' ( .' + F[i].FileExt + ' )'{+'  '+IntToHex(F[i].Format, 8)});
+    ListBox1.Items.Add(F[i].Name + ' ( .' + F[i].FileExt + ' )'{+'  '+IntToHex(F[i].Format,8)});
 
   // Init path with the folder path of this application
   DirectoryEdit1.Text := ExtractFilePath(Application.Location);
@@ -124,14 +123,14 @@ begin
   UpdateWidgets;
 end;
 
-procedure TForm1.ListBox1SelectionChange(Sender: TObject; User: Boolean);
+procedure TForm1.ListBox1SelectionChange(Sender: TObject; User: boolean);
 var
-  i: Integer;
+  i: integer;
 begin
   // User have selected a format in the listbox
   i := ListBox1.ItemIndex;
   if i = -1 then
-    Exit;
+    exit;
 
   // Ask for the 'catalog' of supported audio file format and their sub-format
   // and keep the major format and its file extension for a later use
@@ -150,11 +149,11 @@ end;
 
 procedure TForm1.BStartClick(Sender: TObject);
 var
-  res: Boolean;
+  res: boolean;
 begin
   // checks if user have choosen all parameters
   if not ( CaptureContextIsReady and FileParametersAreReady )then
-    Exit;
+    exit;
 
   // Asks to our capture context to save audio data to the specified file.
   // UserFile is a function that construct the path + filename + file extension
@@ -194,8 +193,7 @@ begin
   // If any show the capture message error
   if FCaptureContext.CaptureError then
     ShowMessage(UserFile+LINEENDING+FCaptureContext.StrCaptureError)
-  else
-    // or play the captured audio
+  else // or play the captured audio
     Form2.Play( UserFile );
 end;
 
@@ -218,14 +216,14 @@ begin
   Timer1.Enabled := True;
 end;
 
-function TForm1.CaptureContextIsReady: Boolean;
+function TForm1.CaptureContextIsReady: boolean;
 begin
-  Result := FCaptureContext <> nil;
+  Result := FCaptureContext <> NIL;
   if Result
     then Result := not FCaptureContext.Error;
 end;
 
-function TForm1.FileParametersAreReady: Boolean;
+function TForm1.FileParametersAreReady: boolean;
 begin
   Result := (DirectoryEdit1.Text<>'') and
             (Edit1.Text<>'') and
@@ -280,7 +278,7 @@ begin
   // Checks if user have choosen all parameters for the selection of capture device
   if (ComboBox1.ItemIndex = -1) or (ComboBox2.ItemIndex = -1) or
     (ComboBox3.ItemIndex = -1) or (ComboBox4.ItemIndex = -1) then
-    Exit;
+    exit;
 
   // Destroy the previous capture context
   if FCaptureContext <> nil then

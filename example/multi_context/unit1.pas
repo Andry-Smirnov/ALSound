@@ -1,7 +1,6 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -192,9 +191,9 @@ var
 begin
   t := Sender as TTrackBar;
   case t.Tag of
-   0: FHelicopter.SetEffectDryWetVolume( FEffect1, t.Position/t.Max );//    FEffect1.Volume := t.Position/t.Max;
-   1: FCarEngine.SetEffectDryWetVolume( FEffect2, t.Position/t.Max );//FEffect2.Volume := t.Position/t.Max;
-   2: FMusic.SetEffectDryWetVolume( FEffect3, t.Position/t.Max );//FEffect3.Volume := t.Position/t.Max;
+   0: FHelicopter.SetEffectDryWetVolume( FEffect1, t.Position/t.Max );
+   1: FCarEngine.SetEffectDryWetVolume( FEffect2, t.Position/t.Max );
+   2: FMusic.SetEffectDryWetVolume( FEffect3, t.Position/t.Max );
   end;
 end;
 

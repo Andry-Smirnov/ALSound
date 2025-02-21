@@ -1,7 +1,6 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -306,7 +305,7 @@ type
     FEAXReverbProp: TEAXReverbProperties;
     FCompressorProp: TALSCompressorProperties;
 
-    FSettingAPreset: Boolean;
+    FSettingAPreset: boolean;
     procedure ApplyEffectOnSound;
     procedure SetTBPosition(aTB: TTrackBar; aMin, aMax, aValue: single);
     procedure UpdateCaptionAutoWah;
@@ -382,7 +381,7 @@ begin
   FCompressorProp.InitDefault;
   FCompressor := FPlaybackContext.CreateEffect( AL_EFFECT_COMPRESSOR, FCompressorProp);
 
-  // Because Linux fonts are higher than Windows
+  // Because Linux GTK2 fonts are higher than Windows
   {$ifdef LINUX}
   ComboBox10.Font.Height:=9;
   ComboBox11.Font.Height:=9;
@@ -473,7 +472,7 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  if not OpenDialog1.Execute then Exit;
+  if not OpenDialog1.Execute then exit;
 
   Label1.Caption := ExtractFileName(OpenDialog1.FileName);
 
@@ -491,7 +490,7 @@ end;
 
 procedure TForm1.TB1Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FAutoWahProp.AttackTime := 0.0001+(1.0-0.0001)*TB1.Position/TB1.Max;
   FAutoWahProp.ReleaseTime := 0.0001+(1.0-0.0001)*TB2.Position/TB2.Max;
   FAutoWahProp.Resonance := 2.0+(1000.0-2.0)*TB3.Position/TB3.Max;
@@ -505,7 +504,7 @@ end;
 
 procedure TForm1.TB7Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FChorusProp.Waveform := TALSChorusWaveform(ComboBox1.ItemIndex);
   FChorusProp.Phase := Round(-180+(180--180)*TB7.Position/TB7.Max);
   FChorusProp.Rate := 10.0*TB8.Position/TB8.Max;
@@ -521,7 +520,7 @@ end;
 
 procedure TForm1.TB12Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FFlangerProp.Waveform := TALSFlangerWaveform(ComboBox2.ItemIndex);
   FFlangerProp.Phase := Round(-180+(180--180)*TB12.Position/TB12.Max);
   FFlangerProp.Rate := 10.0*TB13.Position/TB13.Max;
@@ -537,7 +536,7 @@ end;
 
 procedure TForm1.TB17Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FDistortionProp.Edge := TB17.Position/TB17.Max;
   FDistortionProp.Gain := 0.01+(1.0-0.01)*TB18.Position/TB18.Max;
   FDistortionProp.LowpassCutoff := 80.0+(24000.0-80.0)*TB19.Position/TB19.Max;
@@ -552,7 +551,7 @@ end;
 
 procedure TForm1.TB22Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FEchoProp.Delay := 0.207*TB22.Position/TB22.Max;
   FEchoProp.LRDelay := 0.404*TB23.Position/TB23.Max;
   FEchoProp.Damping := 0.99*TB24.Position/TB24.Max;
@@ -567,7 +566,7 @@ end;
 
 procedure TForm1.TB27Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FEqualizerProp.LowGain := 0.126+(7.943-0.126)*TB27.Position/TB27.Max;
   FEqualizerProp.LowCutoff := 50.0+(800.0-50.0)*TB28.Position/TB28.Max;
   FEqualizerProp.Mid1Gain := 0.126+(7.943-0.126)*TB29.Position/TB29.Max;
@@ -589,13 +588,12 @@ procedure TForm1.TB37Change(Sender: TObject);
 var
   f: single;
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   if RadioButton1.Checked then
     f := 500.0
   else if RadioButton2.Checked then
     f := 1000.0
-  else
-    f := 24000.0;
+  else f := 24000.0;
   FFreqShifterProp.Frequency := f*TB37.Position/TB37.Max;
   FFreqShifterProp.LeftDirection := TALSFreqShifterDirection(ComboBox3.ItemIndex);
   FFreqShifterProp.RightDirection := TALSFreqShifterDirection(ComboBox4.ItemIndex);
@@ -621,13 +619,12 @@ procedure TForm1.TB40Change(Sender: TObject);
 var
   f: single;
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   if RadioButton4.Checked then
     f := 100.0
   else if RadioButton5.Checked then
     f := 1000.0
-  else
-    f := 8000.0;
+  else f := 8000.0;
   FRingModulatorProp.Frequency := f*TB40.Position/TB40.Max;
   FRingModulatorProp.HighPassCutoff := 24000.0*TB41.Position/TB41.Max;
   FRingModulatorProp.Waveform := TALSRingModulatorWaveform( ComboBox5.ItemIndex );
@@ -640,7 +637,7 @@ end;
 
 procedure TForm1.TB42Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FVocalMorpherProp.PhonemeA := TALSVMorpherPhoneme(ComboBox6.ItemIndex);
   FVocalMorpherProp.PhonemeB := TALSVMorpherPhoneme(ComboBox7.ItemIndex);
   FVocalMorpherProp.PhonemeACoarseTuning := TB42.Position;
@@ -656,7 +653,7 @@ end;
 
 procedure TForm1.TB45Change(Sender: TObject);
 begin
-  if FSettingAPreset then Exit;
+  if FSettingAPreset then exit;
   FReverbProp.Density := TB45.Position/TB45.Max;
   FReverbProp.Diffusion := TB46.Position/TB46.Max;
   FReverbProp.Gain := TB47.Position/TB47.Max;
@@ -687,7 +684,7 @@ end;
 
 procedure TForm1.ComboBox10Select(Sender: TObject);
 var
-  f: Integer;
+  f: integer;
 begin
   FSettingAPreset := True;
   if Sender = ComboBox10 then
@@ -857,7 +854,7 @@ end;
 
 procedure TForm1.TB5Change(Sender: TObject);
 begin
-  if FSound = nil then Exit;
+  if FSound = NIL then exit;
 
   if PageControl1.ActivePage = PageAutoWah then
     FSound.SetAuxSendGain(FAutoWah, TB5.Position/TB5.Max);
@@ -900,12 +897,12 @@ end;
 
 procedure TForm1.ApplyEffectOnSound;
 begin
-  if FSound= nil then Exit;
+  if FSound=NIL then exit;
 
   if not CheckBox1.Checked then
   begin
     FSound.RemoveAllEffects;
-    Exit;
+    exit;
   end;
 
   if PageControl1.ActivePage = PageAutoWah then
@@ -1066,7 +1063,7 @@ var txt, n, t: string;
 begin
   n := 'PRESET_NAME';
   if not InputQuery('New preset', 'Enter the name of the preset:', n) then
-    Exit;
+    exit;
   txt := '';
 
   if PageControl1.ActivePage = PageAutoWah then
@@ -1205,7 +1202,7 @@ begin
            '      DecayHFLimit: '+ComboBox9.ItemIndex.ToString+' );';
   end;
 
-  if Length(txt) > 0 then
+  if Length(txt)>0 then
   begin
     Clipboard.AsText := txt;
     ShowMessage('Preset '+n+' have been copied to the clipboard'+LINEENDING+

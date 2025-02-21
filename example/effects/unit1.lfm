@@ -12,7 +12,7 @@ object Form1: TForm1
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '2.2.4.0'
+  LCLVersion = '2.2.6.0'
   object Panel4: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -140,7 +140,7 @@ object Form1: TForm1
       Top = 53
       Width = 35
       Caption = 'State : '
-      Font.Color = clDefault
+      Font.Color = clBlack
       ParentColor = False
       ParentFont = False
     end
@@ -276,7 +276,7 @@ object Form1: TForm1
       Width = 40
       BorderSpacing.Left = 5
       Caption = 'Volume'
-      Font.Color = clDefault
+      Font.Color = clBlack
       ParentColor = False
       ParentFont = False
     end
@@ -332,7 +332,7 @@ object Form1: TForm1
       Top = 198
       Width = 20
       Caption = 'Pan'
-      Font.Color = clDefault
+      Font.Color = clBlack
       ParentColor = False
       ParentFont = False
     end
@@ -345,7 +345,7 @@ object Form1: TForm1
       Width = 20
       Anchors = [akLeft, akBottom]
       Caption = 'LEFT'
-      Font.Color = clDefault
+      Font.Color = clBlack
       Font.Height = 12
       Font.Style = [fsBold]
       ParentColor = False
@@ -378,7 +378,7 @@ object Form1: TForm1
       Anchors = [akRight, akBottom]
       BorderSpacing.Left = 10
       Caption = 'RIGHT'
-      Font.Color = clDefault
+      Font.Color = clBlack
       Font.Height = 12
       Font.Style = [fsBold]
       ParentColor = False
@@ -414,7 +414,7 @@ object Form1: TForm1
       BorderSpacing.Left = 10
       BorderSpacing.Top = 40
       Caption = 'Pitch : 1.0'
-      Font.Color = clDefault
+      Font.Color = clBlack
       ParentColor = False
       ParentFont = False
     end
@@ -481,7 +481,7 @@ object Form1: TForm1
       Top = 325
       Width = 34
       Caption = 'Label1'
-      Font.Color = clDefault
+      Font.Color = clBlack
       ParentColor = False
       ParentFont = False
     end
@@ -595,7 +595,7 @@ object Form1: TForm1
         BorderSpacing.Left = 1
         BorderSpacing.Top = 5
         Caption = 'Velocity'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end
@@ -611,7 +611,7 @@ object Form1: TForm1
         Anchors = [akLeft, akBottom]
         BorderSpacing.Left = 10
         Caption = 'sec'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end
@@ -625,7 +625,7 @@ object Form1: TForm1
         Top = 38
         Width = 80
         BorderSpacing.Top = 5
-        Font.Color = clDefault
+        Font.Color = clBlack
         Increment = 0.2
         MinValue = 0.1
         ParentFont = False
@@ -643,7 +643,7 @@ object Form1: TForm1
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
         Caption = 'in'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end
@@ -737,7 +737,7 @@ object Form1: TForm1
         BorderSpacing.Left = 1
         BorderSpacing.Top = 5
         Caption = 'Velocity'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end
@@ -753,7 +753,7 @@ object Form1: TForm1
         Anchors = [akLeft]
         BorderSpacing.Left = 10
         Caption = 'sec'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end
@@ -767,7 +767,7 @@ object Form1: TForm1
         Top = 37
         Width = 80
         BorderSpacing.Top = 5
-        Font.Color = clDefault
+        Font.Color = clBlack
         Increment = 0.2
         MinValue = 0.1
         ParentFont = False
@@ -785,7 +785,7 @@ object Form1: TForm1
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
         Caption = 'in'
-        Font.Color = clDefault
+        Font.Color = clBlack
         ParentColor = False
         ParentFont = False
       end

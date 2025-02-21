@@ -50,8 +50,7 @@
 }
 unit libsndfile;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 {$ModeSwitch AdvancedRecords}
 {$PACKRECORDS C}
 
@@ -943,13 +942,13 @@ type
     // Write the metadata into a file opened in write or read/write mode.
     // Note: read/write mode don't work with MP3 file.
     // Return True if succed
-    function WriteMetaDataTo(aSNDFile: PSNDFILE): Boolean;
+    function WriteMetaDataTo(aSNDFile: PSNDFILE): boolean;
     // Read the metadata from a file opened in read or read/write mode
     procedure ReadMetaDataFrom(aSNDFile: PSNDFILE);
   end;
 
 
-function LoadSndFileLibrary( const aFilename: string ): Boolean;
+function LoadSndFileLibrary( const aFilename: string ): boolean;
 procedure UnloadSndFileLibrary;
 
 // open an audio file in a cross platform way
@@ -964,10 +963,10 @@ var
   _LibSndFile_ReferenceCounter: cardinal = 0;
   _LibSndFile_Handle: TLibHandle = dynlibs.NilHandle;
 
-function LoadSndFileLibrary( const aFilename: string ): Boolean;
+function LoadSndFileLibrary( const aFilename: string ): boolean;
 var
-  f: UnicodeString;
-  flag: Boolean;
+  f: string;
+  flag: boolean;
 
   function GetProc(const aName: string): Pointer;
   begin
@@ -983,12 +982,9 @@ begin
   end
   else
   begin
-    if Length( aFilename ) = 0 then
-      f := UnicodeString( LIBSNDFILE_LIBNAME )
-    else
-      f := UnicodeString( aFilename );
-
-    _LibSndFile_Handle := DynLibs.LoadLibrary( f );
+    if Length( aFilename ) = 0 then f := LIBSNDFILE_LIBNAME
+      else f := aFilename;
+    _LibSndFile_Handle := DynLibs.LoadLibrary(f);
     if _LibSndFile_Handle <> DynLibs.NilHandle then
     begin
       Pointer(sf_open) := GetProc('sf_open');
@@ -1050,7 +1046,7 @@ begin
   if _LibSndFile_ReferenceCounter > 0 then
     Dec(_LibSndFile_ReferenceCounter);
   if _LibSndFile_ReferenceCounter > 0 then
-    Exit;
+    exit;
 
   if _LibSndFile_Handle <> dynlibs.NilHandle then
   begin
@@ -1060,9 +1056,15 @@ begin
 end;
 
 function ALSOpenAudioFile(const aFilename: string; aMode: cint; var aSFInfo: TSF_INFO): PSNDFILE;
+{$ifdef windows}var s: UNICODESTRING; {$endif}
 begin
-  FillChar(aSFInfo, SizeOf(TSF_INFO), 0);
+  if aMode <> SFM_WRITE then FillChar(aSFInfo, SizeOf(TSF_INFO), 0);
+  {$ifdef windows}
+  s := UNICODESTRING(aFilename);
+  Result := sf_wchar_open(LPCWSTR((s)), aMode, @aSFInfo);
+  {$else}
   Result := sf_open(PChar(aFilename), aMode, @aSFInfo);
+  {$endif}
 end;
 
 { TALSFileMetaData }
@@ -1110,11 +1112,11 @@ begin
          aMetaData.Genre);
 end;
 
-function TALSFileMetaData.WriteMetaDataTo(aSNDFile: PSNDFILE): Boolean;
-var res: Boolean;
+function TALSFileMetaData.WriteMetaDataTo(aSNDFile: PSNDFILE): boolean;
+var res: boolean;
   procedure WriteStrMeta(aStrType: cint; const aValue: string);
   begin
-    if aValue = '' then Exit;
+    if aValue = '' then exit;
     {$ifdef windows}
       res := res and (sf_set_string(aSNDFile, aStrType, PChar(UTF8ToWinCP(aValue))) = 0);
     {$else}
@@ -1123,7 +1125,7 @@ var res: Boolean;
   end;
 begin
   Result := False;
-  if aSNDFile = nil then Exit;
+  if aSNDFile = NIL then exit;
 
   res := True;
   WriteStrMeta(SF_STR_TITLE, PChar(Title));
@@ -1150,7 +1152,7 @@ procedure TALSFileMetaData.ReadMetaDataFrom(aSNDFile: PSNDFILE);
   end;
 begin
   InitDefault;
-  if aSNDFile = nil then Exit;
+  if aSNDFile = NIL then exit;
 
   Title := ReadStrMeta(SF_STR_TITLE);
   Copyright := ReadStrMeta(SF_STR_COPYRIGHT);
