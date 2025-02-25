@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls,
-  ComCtrls, Buttons, EditBtn, Spin,
+  ExtCtrls, ComCtrls, Buttons, EditBtn, Spin,
   ALSound;
 
 type
@@ -89,16 +87,16 @@ type
     // tracks instance
     FTracks: array[0..2] of TTrack;
     FMixingTime: double;
-    FCanceled: Boolean;
+    FCanceled: boolean;
     procedure InitTracks;
-    function GetSampleRate: Integer;
+    function GetSampleRate: integer;
     function GetChannel: TALSLoopbackChannel;
     function GetSampleType: TALSLoopbackSampleType;
-    procedure EnableMixGUI(aState: Boolean);
+    procedure EnableMixGUI(aState: boolean);
   private
     procedure ProcessLoopbackContextOnProgress(Sender: TALSLoopbackContext;
       aTimePos: double; const aFrameBuffer: TALSLoopbackFrameBuffer;
-      var SaveBufferToFile, Cancel: Boolean);
+      var SaveBufferToFile, Cancel: boolean);
   public
 
   end;
@@ -114,13 +112,12 @@ implementation
 
 procedure TForm1.BitBtn1Click(Sender: TObject);
 var
-  i: Integer;
+  i: integer;
 begin
-  if FPlaybackContext <> nil then
-    Exit;
+  if FPlaybackContext <> NIL then
+    exit;
 
-  if not OpenDialog1.Execute then
-    Exit;
+  if not OpenDialog1.Execute then exit;
 
   i := TBitBtn(Sender).Tag;
 
@@ -180,7 +177,7 @@ end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  if FPlaybackContext <> nil then
+  if FPlaybackContext <> NIL then
     FPlaybackContext.Free;
 end;
 
@@ -197,14 +194,16 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 var
-  i: Integer;
+  i: integer;
 begin
   BStopClick(NIL);
 
   // first, (re-)creates a playback context
   FPlaybackContext := ALSManager.CreateDefaultPlaybackContext;
   // then adds the user's sounds
-  for i := 0 to High(FTracks) do
+  for i:=0 to High(FTracks) do
+  begin
+    if FTracks[i].Filename <> '' then
     begin
       if FTracks[i].Filename <> '' then
         begin
@@ -217,21 +216,21 @@ end;
 
 procedure TForm1.BStopClick(Sender: TObject);
 var
-  i: Integer;
+  i: integer;
 begin
-  if FPlaybackContext = nil then
-    Exit;
+  if FPlaybackContext = NIL then
+    exit;
 
   FreeAndNil(FPlaybackContext);
 
-  for i := 0 to High(FTracks) do
-    FTracks[i].Sound := nil;
+  for i:=0 to High(FTracks) do
+    FTracks[i].Sound := NIL;
 end;
 
 procedure TForm1.BMixToFileClick(Sender: TObject);
 var
   FAttribs: TALSContextAttributes;
-  i: Integer;
+  i: integer;
   fileFormat: TALSFileFormat;
   outputFilename: string;
 begin
@@ -241,25 +240,25 @@ begin
   // Some check.
   if (Edit1.Text = '') or
      (DirectoryEdit1.Text = '') then
-    Exit;
+    exit;
 
   // Creates a loopback context and checks error.
   FLoopbackContext := ALSManager.CreateDefaultLoopbackContext;
   if FLoopbackContext.Error then
-    begin
-      ShowMessage(FLoopbackContext.StrError);
-      FreeAndNil(FLoopbackContext);
-      Exit;
-    end;
+  begin
+    ShowMessage(FLoopbackContext.StrError);
+    FreeAndNil(FLoopbackContext);
+    exit;
+  end;
 
   // Checks if the mixing format is supported.
   if not FLoopbackContext.IsAttributesSupported(GetSampleRate, GetChannel, GetSampleType) then
-    begin
-      ShowMessage('Current mixing format not supported'+lineending+
-                  'Please, try different setting');
-      FreeAndNil(FLoopbackContext);
-      Exit;
-    end;
+  begin
+    ShowMessage('Current mixing format not supported'+lineending+
+                'Please, try different setting');
+    FreeAndNil(FLoopbackContext);
+    exit;
+  end;
 
 
   EnableMixGUI(False); // Avoid any user's interaction.
@@ -275,7 +274,7 @@ begin
 
   // Adds the sounds to our loopback context and play them.
   // Only sounds in playing state will be mixed.
-  for i := 0 to High(FTracks) do
+  for i:=0 to High(FTracks) do
     if FTracks[i].Filename <> '' then
       begin
         FTracks[i].Sound := FLoopbackContext.AddStream(FTracks[i].Filename);
@@ -344,8 +343,8 @@ begin
   FreeAndNil(FLoopbackContext);
 
   // Prepare for another mixing
-  for i := 0 to High(FTracks) do
-    FTracks[i].Sound := nil;
+  for i:=0 to High(FTracks) do
+    FTracks[i].Sound := NIL;
   ProgressBar1.Position := 0;
   ProgressBar2.Position := ALS_DECIBEL_MIN_VALUE;
   ProgressBar3.Position := ALS_DECIBEL_MIN_VALUE;
@@ -355,13 +354,13 @@ end;
 procedure TForm1.TrackBar1Change(Sender: TObject);
 var
   tb: TTrackBar;
-  i: Integer;
+  i: integer;
 begin
   // user change volume
   tb := Sender as TTrackBar;
   i := tb.Tag;
   FTracks[i].Volume := tb.Position/tb.Max;
-  if FTracks[i].Sound <> nil then
+  if FTracks[i].Sound <> NIL then
     FTracks[i].Sound.Volume.Value := FTracks[i].Volume;
 end;
 
@@ -369,17 +368,17 @@ procedure TForm1.InitTracks;
 var
   i: Integer;
 begin
-  for i := 0 to High(FTracks) do
-    begin
-      FTracks[i].Sound := nil;
-      FTracks[i].Volume := ALS_VOLUME_MAX;
-    end;
+  for i:=0 to High(FTracks) do
+  begin
+    FTracks[i].Sound := NIL;
+    FTracks[i].Volume:= ALS_VOLUME_MAX;
+  end;
   FTracks[0].LabelFilename := Label1;
   FTracks[1].LabelFilename := Label2;
   FTracks[2].LabelFilename := Label3;
 end;
 
-function TForm1.GetSampleRate: Integer;
+function TForm1.GetSampleRate: integer;
 begin
   case ComboBox4.ItemIndex of
     0: Result := 8000;
@@ -417,7 +416,7 @@ begin
   end;
 end;
 
-procedure TForm1.EnableMixGUI(aState: Boolean);
+procedure TForm1.EnableMixGUI(aState: boolean);
 begin
   Panel1.Enabled := aState;
   Panel2.Enabled := aState;
@@ -438,7 +437,7 @@ end;
 //
 procedure TForm1.ProcessLoopbackContextOnProgress(Sender: TALSLoopbackContext;
   aTimePos: double; const aFrameBuffer: TALSLoopbackFrameBuffer;
-  var SaveBufferToFile, Cancel: Boolean);
+  var SaveBufferToFile, Cancel: boolean);
 begin
   FMixingTime := aTimePos;
 

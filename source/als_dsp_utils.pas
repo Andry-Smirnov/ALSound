@@ -22,8 +22,7 @@
 
 unit als_dsp_utils;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
@@ -34,7 +33,7 @@ const
   ALS_DECIBEL_MIN_VALUE = -60;
 
 type
-  ArrayOfByte = array of Byte;
+  ArrayOfByte = array of byte;
   ArrayOfQWord = array of QWord;
   ArrayOfSmallint = array of SmallInt;
   ArrayOfSingle = array of Single;
@@ -60,7 +59,7 @@ type
   procedure SplittedToInterleaved_Double(const A: TSplittedChannelsDouble; p: PDouble);
 
   // convert an array of values in range [0..1] to dB.
-  procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: Integer);
+  procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: integer);
 
   // return the mean of the sample for each channel
   function dsp_Mean_Smallint(p: PSmallInt; aFrameCount: longword; aChannelCount: Smallint ): ArrayOfSmallint;
@@ -89,6 +88,15 @@ type
 
   procedure dsp_AmplifySample_Smallint(p: PSmallint; aFrameIndex: longword; aChannelCount: Smallint; aGain: single); inline;
   procedure dsp_AmplifySample_Float(p: PSingle; aFrameIndex: longword; aChannelCount: Smallint; aGain: single); inline;
+
+  // Increase or decrease the frame count in the buffer, according to aCoeff value in range [0.5, 2.0]
+  // buffer pointed by 'pOut' must be capable to contain aFrameCount multiplyed by aCoeff!
+  // This effect is like the Pitch
+  procedure dsp_StretchFrame_Smallint(pIn: PSmallint; aInFrameCount: longword; aChannelCount: Smallint;
+                                      aCoeff: single; pOut: PSmallint; out aOutFrameCount: longword);
+  procedure dsp_StretchFrame_Float(pIn: PSingle; aInFrameCount: longword; aChannelCount: Smallint;
+                                      aCoeff: single; pOut: PSingle; out aOutFrameCount: longword);
+
 implementation
 uses Math;
 
@@ -112,21 +120,18 @@ end;
 
 function InterleavedToSplitted_Smallint(p: PSmallInt; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsSmallInt;
-var ichan: Integer;
+var ichan: integer;
   isamp: longword;
 begin
-  Result := nil;
-  if aChannelCount = 0 then
-    Exit;
-  if aFrameCount = 0 then
-    Exit;
+  Result := NIL;
+  if aChannelCount = 0 then exit;
+  if aFrameCount = 0 then exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do
   begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do
-    begin
+    for ichan:=0 to aChannelCount-1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -138,21 +143,18 @@ end;
 
 function InterleavedToSplitted_Float(p: PSingle; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsSingle;
-var ichan: Integer;
+var ichan: integer;
   isamp: longword;
 begin
-  Result := nil;
-  if aChannelCount = 0 then
-    Exit;
-  if aFrameCount = 0 then
-    Exit;
+  Result := NIL;
+  if aChannelCount = 0 then exit;
+  if aFrameCount = 0 then exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
   while aFrameCount > 0 do
   begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do
-    begin
+    for ichan:=0 to aChannelCount-1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -164,22 +166,19 @@ end;
 
 function InterleavedToSplitted_Double(p: PDouble; aFrameCount: longword;
   aChannelCount: Smallint): TSplittedChannelsDouble;
-var ichan: Integer;
+var ichan: integer;
   isamp: longword;
 begin
-  Result := nil;
-  if aChannelCount <= 0 then
-    Exit;
-  if aFrameCount <= 0 then
-    Exit;
+  Result := NIL;
+  if aChannelCount <= 0 then exit;
+  if aFrameCount <= 0 then exit;
 
   SetLength(Result, aChannelCount, aFrameCount);
 
   while aFrameCount > 0 do
   begin
     isamp := 0;
-    for ichan:=0 to aChannelCount - 1 do
-    begin
+    for ichan:=0 to aChannelCount-1 do begin
       Result[ichan, isamp] := p^;
       inc(p);
       inc(isamp);
@@ -226,9 +225,9 @@ begin
    end;
 end;
 
-procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: Integer);
+procedure als_dsp_ValuesToDecibel(p: PSingle; aCount: integer);
 var
-  i: Integer;
+  i: integer;
 begin
   for i := 1 to aCount do
   begin
@@ -245,21 +244,21 @@ var
   i: longword;
   qwTemp: ArrayOfQWord;
 begin
-  qwTemp := nil;
+  qwTemp := NIL;
   SetLength( qwTemp, aChannelCount );
   FillChar( qwTemp, SizeOf(QWord)*aChannelCount, $00);
   while aFrameCount>0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       qwTemp[i] := qwTemp[i] + QWord( p^ );
       inc( p );
     end;
     dec( aFrameCount );
   end;
-  Result := nil;
+  Result := NIL;
   SetLength( Result, aChannelCount );
-  for i := 0 to aChannelCount - 1 do
+  for i:=0 to aChannelCount-1 do
     Result[i] := Round( qwTemp[i] / aFrameCount );
 end;
 
@@ -267,14 +266,14 @@ function dsp_Mean_Float(p: PSingle; aFrameCount: longword; aChannelCount: Smalli
 var
   i, fc: longword;
 begin
-  Result := nil;
+  Result := NIL;
   SetLength( Result, aChannelCount );
   FillChar( Result[0], SizeOf(single)*aChannelCount, $00);
 
   fc := aFrameCount;
   while fc>0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       Result[i] := Result[i] + p^;
       inc( p );
@@ -282,7 +281,7 @@ begin
     dec( fc );
   end;
 
-  for i := 0 to aChannelCount - 1 do
+  for i:=0 to aChannelCount-1 do
     Result[i] := Result[i] / aFrameCount;
 end;
 
@@ -293,7 +292,7 @@ var
 begin
   while aFrameCount>0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := p^ + aValues[i];
       inc( p );
@@ -309,7 +308,7 @@ var
 begin
   while aFrameCount>0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := p^ + aValues[i];
       inc( p );
@@ -321,10 +320,10 @@ end;
 procedure dsp_RemoveDCBias_Smallint(p: PSmallint; aFrameCount: longword; aChannelCount: Smallint);
 var
   M: ArrayOfSmallint;
-  i: Integer;
+  i: integer;
 begin
   M := dsp_Mean_SmallInt( p, aFrameCount, aChannelCount );
-  for i := 0 to High(M) do
+  for i:=0 to High(M) do
     M[i] := -M[i];
   dsp_Add_Smallint(p, aFrameCount, aChannelCount, M);
 end;
@@ -332,10 +331,10 @@ end;
 procedure dsp_RemoveDCBias_Float(p: PSingle; aFrameCount: longword; aChannelCount: Smallint);
 var
   M: ArrayOfSingle;
-  i: Integer;
+  i: integer;
 begin
   M := dsp_Mean_Float( p, aFrameCount, aChannelCount );
-  for i := 0 to High(M) do
+  for i:=0 to High(M) do
     M[i] := -M[i];
   dsp_Add_Float(p, aFrameCount, aChannelCount, M);
 end;
@@ -343,7 +342,7 @@ end;
 procedure dsp_ComputeLinearLevel_Smallint(p: PSmallint; aFrameCount: longword;
   aChannelCount: Smallint; aTarget: PSingle);
 var
-  i: Integer;
+  i: integer;
   tar: PSingle;
 begin
   tar := aTarget;
@@ -353,8 +352,8 @@ begin
     inc(tar);
   end;
 
-  if p = nil then
-    Exit;
+  if p = NIL then
+    exit;
 
   // Get peak sample values
   while aFrameCount > 0 do
@@ -381,7 +380,7 @@ end;
 procedure dsp_ComputeLinearLevel_Float(p: PSingle; aFrameCount: longword;
   aChannelCount: Smallint; aTarget: PSingle);
 var
-  i: Integer;
+  i: integer;
   tar: PSingle;
 begin
   tar := aTarget;
@@ -391,8 +390,8 @@ begin
     inc(tar);
   end;
 
-  if p = nil then
-    Exit;
+  if p = NIL then
+    exit;
 
   // Get peak sample values
   while aFrameCount > 0 do
@@ -424,7 +423,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := Smallint(0);
       inc(p); //p := p + SizeOf(Smallint);
@@ -440,7 +439,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := 0.0;
       inc(p);
@@ -456,7 +455,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := Smallint(Random(32768) - Random(32769 ));
       inc(p); //p := p + SizeOf(Smallint);
@@ -472,7 +471,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := Random - Random;
       inc(p);
@@ -488,7 +487,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := Smallint(EnsureRange(Round(p^*aGain), -32768, 32767));
       inc(p);
@@ -504,7 +503,7 @@ var
 begin
   while aFrameCount > 0 do
   begin
-    for i := 0 to aChannelCount - 1 do
+    for i:=0 to aChannelCount-1 do
     begin
       p^ := p^ * aGain;
       inc(p);
@@ -534,6 +533,64 @@ begin
     p^ := p^ * aGain;
     inc(p);
     dec(aChannelCount);
+  end;
+end;
+
+procedure dsp_StretchFrame_Smallint(pIn: PSmallint; aInFrameCount: longword;
+  aChannelCount: Smallint; aCoeff: single; pOut: PSmallint; out aOutFrameCount: longword);
+var ptrOffset, delta: single;
+  i, j: integer;
+begin
+  if aCoeff > 2.0 then aCoeff := 2.0;
+  if aCoeff < 0.5 then aCoeff := 0.5;
+
+  if aCoeff = 1.0 then begin
+    Move(pIn^, pOut^, aInFrameCount*aChannelCount*SizeOf(Smallint));
+    aOutFrameCount := aInFrameCount;
+    exit;
+  end;
+
+  aOutFrameCount := Trunc(aInFrameCount * aCoeff);
+  delta := 1/aCoeff;
+  ptrOffset := 0.0;
+  for i:=0 to aOutFrameCount-1 do begin
+    for j:=0 to aChannelCount-1 do begin
+      pOut^ := PSmallInt(pIn+Trunc(ptrOffset)+j)^;
+      inc(pOut);
+    end;
+    ptrOffset := ptrOffset + delta;
+
+    inc(pIn, Trunc(ptrOffset)*aChannelCount);
+    ptrOffset := Frac(ptrOffset);
+  end;
+end;
+
+procedure dsp_StretchFrame_Float(pIn: PSingle; aInFrameCount: longword;
+  aChannelCount: Smallint; aCoeff: single; pOut: PSingle; out aOutFrameCount: longword);
+var ptrOffset, delta: single;
+  i, j: integer;
+begin
+  if aCoeff > 2.0 then aCoeff := 2.0;
+  if aCoeff < 0.5 then aCoeff := 0.5;
+
+  if aCoeff = 1.0 then begin
+    Move(pIn^, pOut^, aInFrameCount*aChannelCount*SizeOf(Smallint));
+    aOutFrameCount := aInFrameCount;
+    exit;
+  end;
+
+  aOutFrameCount := Trunc(aInFrameCount * aCoeff);
+  delta := 1/aCoeff;
+  ptrOffset := 0.0;
+  for i:=0 to aOutFrameCount-1 do begin
+    for j:=0 to aChannelCount-1 do begin
+      pOut^ := PSingle(pIn+Trunc(ptrOffset)+j)^;
+      inc(pOut);
+    end;
+    ptrOffset := ptrOffset + delta;
+
+    inc(pIn, Trunc(ptrOffset)*aChannelCount);
+    ptrOffset := Frac(ptrOffset);
   end;
 end;
 

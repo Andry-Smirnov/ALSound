@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Buttons,
-  ExtCtrls,
-  ComCtrls,
+  ExtCtrls, ComCtrls,
   ALSound,
   frame_channel_level;
 
@@ -115,7 +113,7 @@ type
 
     FEffects: array[0..2] of TALSEffect; // 3 effects applyed on the playback sound
 
-    FFlag_LockPresetSelectionChange: Boolean;
+    FFlag_LockPresetSelectionChange: boolean;
     FPresetIndex: array[0..2] of integer;
 
     FAutowahProp: TALSAutoWahProperties;
@@ -133,11 +131,11 @@ type
 
     FrameChannelsLevel1: TFrameChannelsLevel;
 
-    procedure FillPresetList(aCB: TComboBox; aEffectIndex: Integer);
+    procedure FillPresetList(aCB: TComboBox; aEffectIndex: integer);
     procedure ReconstructEffectChain;
-    procedure CreateEffect(Index: Integer);
+    procedure CreateEffect(Index: integer);
 
-    function CaptureContextIsReady: Boolean;
+    function CaptureContextIsReady: boolean;
     procedure UpdateWidgets;
     procedure ProcessOnCaptureBuffer(Sender: TALSCaptureContext;
                                      const aBuf: TALSCaptureFrameBuffer);
@@ -196,7 +194,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 var
   A: TStringArray;
-  i: Integer;
+  i: integer;
 begin
   // Check if ALSManager encounter an error while loading OpenAL-Soft and LibSndFile
   if ALSManager.Error then
@@ -226,7 +224,7 @@ procedure TForm1.BStartClick(Sender: TObject);
 begin
   // checks if user have choosen all parameters
   if not CaptureContextIsReady then
-    Exit;
+    exit;
 
   // Asks to our capture context to play the captured audio in real time.
   FSound := FCaptureContext.PrepareToPlayback( FPlaybackContext );
@@ -306,7 +304,7 @@ begin
   FSound.Tone.Value := TrackBar3.Position/TrackBar3.Max;
 end;
 
-procedure TForm1.FillPresetList(aCB: TComboBox; aEffectIndex: Integer);
+procedure TForm1.FillPresetList(aCB: TComboBox; aEffectIndex: integer);
 begin
   aCB.Clear;
   case aEffectIndex of
@@ -337,7 +335,7 @@ begin
   FPlaybackContext.DeleteEffect(FEffects[1]);
   FPlaybackContext.DeleteEffect(FEffects[2]);
 
-  for i := 0 to High(FEffects) do
+  for i:=0 to High(FEffects) do
   begin
    // FPlaybackContext.DeleteEffect(FEffects[i]);
     CreateEffect(i);
@@ -359,9 +357,9 @@ begin
   FSound.SetEffectDryWetVolume( FEffects[0], TrackBar1.Position/TrackBar1.Max);
 end;
 
-procedure TForm1.CreateEffect(Index: Integer);
+procedure TForm1.CreateEffect(Index: integer);
 var
-  effectType, presetIndex: Integer;
+  effectType, presetIndex: integer;
 begin
   case Index of
     0: effectType := ComboBox5.ItemIndex;
@@ -430,11 +428,11 @@ begin
   end;
 end;
 
-function TForm1.CaptureContextIsReady: Boolean;
+function TForm1.CaptureContextIsReady: boolean;
 begin
-  Result := FCaptureContext <> nil;
-  if Result then
-    Result := not FCaptureContext.Error;
+  Result := FCaptureContext <> NIL;
+  if Result
+    then Result := not FCaptureContext.Error;
 end;
 
 procedure TForm1.UpdateWidgets;
@@ -491,7 +489,7 @@ var
 begin
   // User have selected a capture device.
   if ComboBox1.ItemIndex = -1 then
-    Exit;
+    exit;
 
   // Destroy the previous capture context.
   if FCaptureContext <> nil then
@@ -568,7 +566,7 @@ var
 begin
   // User have selected a preset.
   if FFlag_LockPresetSelectionChange then
-    Exit;
+    exit;
 
   cb := Sender as TComboBox;
 

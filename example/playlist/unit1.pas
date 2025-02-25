@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, StdCtrls,
-  Spin, ExtCtrls,
-  ComCtrls,
+  Spin, ExtCtrls, ComCtrls,
   ALSound;
 
 type
@@ -66,6 +64,9 @@ begin
   // load OpenAL-Soft and LibSndFile libraries
   ALSManager.LoadLibraries;
 
+  // Volume trackbar better match human hearing
+  ALSManager.VolumeMode := ALS_VOLUME_MODE_SQUARED;
+
   // Creates a default playback context with default attributes
   FPlaybackContext := ALSManager.CreateDefaultPlaybackContext;
 
@@ -84,7 +85,7 @@ begin
   if FPlaybackContext.Error then
     ShowMessage(FPlaybackContext.StrError);
 
-  Timer1.Enabled := True;
+  Timer1.Enabled:=TRUE;
   Label3.Caption:='';
 end;
 
@@ -104,12 +105,10 @@ begin
 end;
 
 procedure TForm1.SpeedButton4Click(Sender: TObject);
-var i: Integer;
+var i: integer;
 begin
-  if not OpenDialog1.Execute then
-    Exit;
-  for i := 0 to OpenDialog1.Files.Count - 1 do
-  begin
+  if not OpenDialog1.Execute then exit;
+  for i:=0 to OpenDialog1.Files.Count-1 do begin
     FPlaybackContext.Playlist.Add(OpenDialog1.Files.Strings[i]);
     ListBox1.Items.Add(ExtractFileName(OpenDialog1.Files.Strings[i]));
   end;
@@ -133,12 +132,12 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
-  Timer1.Enabled := False;
+  Timer1.Enabled:=FALSE;
 
   if FPlaybackContext.Error then
   begin
     Label3.Caption := FPlaybackContext.StrError;
-    Exit;
+    exit;
   end;
 
   case FPlaybackContext.Playlist.State of
@@ -148,7 +147,7 @@ begin
                         FPlaybackContext.Playlist.Count.ToString+' - '+
                         ExtractFileName(FPlaybackContext.Playlist.CurrentFile);
       Label3.Tag:=0;
-      Label3.Font.Color :=clDefault;
+      Label3.Font.Color:=clDefault;
       ListBox1.ItemIndex:=FPlaybackContext.Playlist.CurrentIndex;
     end;
 
@@ -156,10 +155,10 @@ begin
     Label3.Tag := Label3.Tag+1;
     case Label3.Tag of
       0..1: begin
-       Label3.Font.Color :=clGray;
+       Label3.Font.Color:=clGray;
       end;
       2: begin
-       Label3.Font.Color :=clDefault;
+       Label3.Font.Color:=clDefault;
       end;
       3: Label3.Tag := 0;
     end;
@@ -169,12 +168,12 @@ begin
    ALS_STOPPED: begin
      Label3.Caption := 'Stopped';
      Label3.Tag:=0;
-     Label3.Font.Color :=clDefault;
+     Label3.Font.Color:=clDefault;
      ListBox1.ItemIndex:=-1;
    end;
 
   end;
-  Timer1.Enabled := True;
+  Timer1.Enabled:=TRUE;
 end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);

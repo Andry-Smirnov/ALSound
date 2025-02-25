@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls,
-  ComCtrls, Spin, Buttons,
+  ExtCtrls, ComCtrls, Spin, Buttons,
   ALSound;
 
 type
@@ -174,25 +172,23 @@ implementation
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
-  FSound.Play;
-  FSound.Volume.Value := ALS_VOLUME_MAX;
+ if FSound = NIL then exit;
+ FSound.Play;
+ FSound.Volume.Value := ALS_VOLUME_MAX;
 end;
 
 procedure TForm1.BLoadClick(Sender: TObject);
 var
   s: string;
 begin
-  if not OD1.Execute then
-    Exit;
+ if not OD1.Execute then exit;
 
   UncheckAllEffects;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 
  // Free the old one
- if FSound <> nil then
+ if FSound <> NIL then
    FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
  // Creates the new one as stream
@@ -219,31 +215,25 @@ end;
 
 procedure TForm1.BPauseClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
-  if FSound <> nil then
-    FSound.Pause;
+ if FSound = NIL then exit;
+ if FSound <> nil then FSound.Pause;
 end;
 
 procedure TForm1.BStopClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
-  if FSound <> nil then
-    FSound.Stop;
+ if FSound = NIL then exit;
+ if FSound <> nil then FSound.Stop;
 end;
 
 procedure TForm1.BFadeInClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
-  FSound.FadeIn( ALS_VOLUME_MAX, FSE1.Value, TALSCurveID(ComboBox1.ItemIndex) );
+ if FSound = NIL then exit;
+ FSound.FadeIn( ALS_VOLUME_MAX, FSE1.Value, TALSCurveID(ComboBox1.ItemIndex) );
 end;
 
 procedure TForm1.BFadeOutClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then exit;
   FSound.FadeOut( FSE2.Value, TALSCurveID(ComboBox2.ItemIndex) );
 end;
 
@@ -254,99 +244,89 @@ end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
-  if FSound = nil then
-   Exit;
+  if FSound = NIL then exit;
   FSound.Loop := CheckBox1.Checked;
 end;
 
 procedure TForm1.CheckBox2Change(Sender: TObject);
 begin
   if CheckBox2.Checked then
-    begin
-      FSound.ApplyEffect( FEAXReverb );
-      FSound.SetAuxSendGain( FEAXReverb, TB1.Position/TB1.Max );
-    end
-  else
-    FSound.RemoveEffect( FEAXReverb );
+  begin
+    FSound.ApplyEffect( FEAXReverb );
+    FSound.SetAuxSendGain( FEAXReverb, TB1.Position/TB1.Max );
+  end
+  else FSound.RemoveEffect( FEAXReverb );
 end;
 
 procedure TForm1.CheckBox3Change(Sender: TObject);
 begin
   if CheckBox3.Checked then
-    begin
-      FSound.ApplyEffect( FVocalMorpher );
-      FSound.SetAuxSendGain( FVocalMorpher, TB2.Position/TB2.Max );
-    end
-  else
-    FSound.RemoveEffect( FVocalMorpher );
+  begin
+    FSound.ApplyEffect( FVocalMorpher );
+    FSound.SetAuxSendGain( FVocalMorpher, TB2.Position/TB2.Max );
+  end
+  else FSound.RemoveEffect( FVocalMorpher );
 end;
 
 procedure TForm1.CheckBox4Change(Sender: TObject);
 begin
   if CheckBox4.Checked then
-    begin
-      FSound.ApplyEffect( FDistorsion );
-      FSound.SetAuxSendGain( FDistorsion, TB3.Position/TB3.Max );
-    end
-  else
-    FSound.RemoveEffect( FDistorsion );
+  begin
+    FSound.ApplyEffect( FDistorsion );
+    FSound.SetAuxSendGain( FDistorsion, TB3.Position/TB3.Max );
+  end
+  else FSound.RemoveEffect( FDistorsion );
 end;
 
 procedure TForm1.CheckBox5Change(Sender: TObject);
 begin
   if CheckBox5.Checked then
-    begin
-      FSound.ApplyEffect( FEcho );
-      FSound.SetAuxSendGain( FEcho, TB4.Position/TB4.Max );
-    end
-  else
-    FSound.RemoveEffect( FEcho );
+  begin
+    FSound.ApplyEffect( FEcho );
+    FSound.SetAuxSendGain( FEcho, TB4.Position/TB4.Max );
+  end
+  else FSound.RemoveEffect( FEcho );
 end;
 
 procedure TForm1.CheckBox6Change(Sender: TObject);
 begin
   if CheckBox6.Checked then
-    begin
-      FSound.ApplyEffect( FFlanger );
-      FSound.SetAuxSendGain( FFlanger, TB5.Position/TB5.Max );
-    end
-  else
-    FSound.RemoveEffect( FFlanger );
+  begin
+    FSound.ApplyEffect( FFlanger );
+    FSound.SetAuxSendGain( FFlanger, TB5.Position/TB5.Max );
+  end
+  else FSound.RemoveEffect( FFlanger );
 end;
 
 procedure TForm1.CheckBox7Change(Sender: TObject);
 begin
   if CheckBox7.Checked then
-    begin
-      FSound.ApplyEffect( FAutoWah );
-      FSound.SetAuxSendGain( FAutoWah, TB6.Position/TB6.Max );
-    end
-  else
-    FSound.RemoveEffect( FAutoWah );
+  begin
+    FSound.ApplyEffect( FAutoWah );
+    FSound.SetAuxSendGain( FAutoWah, TB6.Position/TB6.Max );
+  end
+  else FSound.RemoveEffect( FAutoWah );
 end;
 
 procedure TForm1.CheckBox8Change(Sender: TObject);
 begin
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.ApplyToneOnAuxSend := CheckBox8.Checked;
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
-var i: Integer;
+var i: integer;
 begin
   i := ComboBox1.ItemIndex;
-  if i = -1 then
-    Exit;
+  if i = -1 then exit;
   ALSVelocityCurveList.GetCurveByIndex( i ).DrawOn( Image1 );
 end;
 
 procedure TForm1.ComboBox2Change(Sender: TObject);
 var
-  i: Integer;
 begin
   i := ComboBox2.ItemIndex;
-  if i = -1 then
-    Exit;
+  if i = -1 then exit;
   ALSVelocityCurveList.GetCurveByIndex( i ).DrawOn( Image2 );
 end;
 
@@ -374,7 +354,7 @@ begin
   // Create a playback context with the default playback device and our custom attributes
   FPlaybackContext := ALSManager.CreatePlaybackContext(-1, FAttribs);
 
-  // show the real available auxiliary send
+  // show the obtained auxiliary send
   Label16.Caption := FPlaybackContext.ObtainedAuxiliarySendCount.ToString+' auxiliary send available';
 
   // create an EAX reverb with the preset 'EFX_REVERB_PRESET_UNDERWATER'
@@ -408,17 +388,14 @@ begin
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
-var i: Integer;
+var i: integer;
   txt: string;
 begin
   // display some error message or hints
-  if FPlaybackContext.Error then
-    begin
-      ShowMessage(FPlaybackContext.StrError);
-      Label16.Caption := '';
-    end
-  else
-    begin
+  if FPlaybackContext.Error then begin
+    ShowMessage(FPlaybackContext.StrError);
+    Label16.Caption := '';
+  end else begin
       txt:='';
       if not FPlaybackContext.HaveStereoAngle then txt+='Can not apply panning on stereo sound...'+LINEENDING;
       if not FPlaybackContext.HaveEFX then txt+='Can not EFX...'+LINEENDING;
@@ -434,11 +411,11 @@ begin
   // fill the combo box with available velocity curve list
   ComboBox1.Clear;
   ComboBox2.Clear;
-  for i := 0 to ALSVelocityCurveList.Count - 1 do
-    begin
+  for i:=0 to ALSVelocityCurveList.Count-1 do
+   begin
     ComboBox1.Items.Add( ALSVelocityCurveList.GetCurveByIndex( i ).Name );
     ComboBox2.Items.Add( ALSVelocityCurveList.GetCurveByIndex( i ).Name );
-    end;
+   end;
   ComboBox1.ItemIndex := 2;
   ComboBox2.ItemIndex := 1;
   ComboBox1Change( self );
@@ -453,25 +430,22 @@ end;
 procedure TForm1.BMuteClick(Sender: TObject);
 begin
   case BMute.Tag of
-    0:  begin
-          BMute.Tag:=1;
-          BMute.Color := $0080FFFF;
-          if FSound <> nil then
-            FSound.Mute := True;
-        end;
-    1:  begin
-          BMute.Tag := 0;
-          BMute.Color := $007D7D7D;
-          if FSound <> nil then
-            FSound.Mute := False;
-        end;
+    0: begin
+      BMute.Tag:=1;
+      BMute.Color:=$0080FFFF;
+      if FSound <> NIl then FSound.Mute:=TRUE;
+    end;
+    1: begin
+      BMute.Tag:=0;
+      BMute.Color:=$007D7D7D;
+      if FSound <> NIl then FSound.Mute:=FALSE;
+    end;
   end;
 end;
 
 procedure TForm1.TB1Change(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIl then exit;
 
   if Sender=TB1 then // FSound.SetEffectDryWetVolume( FEAXReverb, TB1.Position/TB1.Max );
     FSound.SetAuxSendGain( FEAXReverb, TB1.Position/TB1.Max );
@@ -494,7 +468,7 @@ end;
 
 procedure TForm1.TBToneChange(Sender: TObject);
 begin
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.Tone.Value := TBTone.Position/TBTone.Max;
 end;
 
@@ -502,16 +476,15 @@ procedure TForm1.Timer1Timer(Sender: TObject);
 var
   s: string;
 begin
-  Timer1.Enabled := False;
-  if FSound = nil then
-    begin
-      Label1.Caption := ' ';
-      Label4.Caption := ' ';
-      Label15.Caption := ' ';
-      Label17.Caption := ' ';
-      Timer1.Enabled := True;
-      Exit;
-    end;
+  Timer1.Enabled:=FALSE;
+  if FSound = NIL then begin
+    Label1.Caption := ' ';
+    Label4.Caption := ' ';
+    Label15.Caption := ' ';
+    Label17.Caption := ' ';
+    Timer1.Enabled:=TRUE;
+    exit;
+  end;
 
   if FSound.Error then
     Label4.Caption := FSound.StrError
@@ -531,20 +504,18 @@ begin
     end;
     Label4.Caption := 'State : ' + s;
   end;
-  Timer1.Enabled := True;
+  Timer1.Enabled:=TRUE;
 end;
 
 procedure TForm1.TBVolumeChange(Sender: TObject);
 begin
- if FSound = nil then
-   Exit;
+ if FSound = NIL then exit;
  FSound.Volume.Value := TBVolume.Position/TBVolume.Max;
 end;
 
 procedure TForm1.TBPitchChange(Sender: TObject);
 begin
- if FSound = nil then
-   Exit;
+ if FSound = NIL then exit;
  FSound.Pitch.Value := TBPitch.Position / 100;
  Label3.Caption := 'Pitch : ' + formatfloat('0.00', FSound.Pitch.Value);
 end;
@@ -552,8 +523,7 @@ end;
 procedure TForm1.TBPanChange(Sender: TObject);
 var v: single;
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then exit;
   v:=TBPan.Position/TBPan.Max;
   FSound.Pan.Value:=v;
   Label12.Caption := 'Pan: ' + formatfloat('0.0', v);
@@ -561,18 +531,18 @@ end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.SetDryGain(TrackBar1.Position/TrackBar1.Max);
 end;
 
 procedure TForm1.UncheckAllEffects;
 begin
-  CheckBox2.Checked := False;
-  CheckBox3.Checked := False;
-  CheckBox4.Checked := False;
-  CheckBox5.Checked := False;
-  CheckBox6.Checked := False;
-  CheckBox7.Checked := False;
+  CheckBox2.Checked:=FALSE;
+  CheckBox3.Checked:=FALSE;
+  CheckBox4.Checked:=FALSE;
+  CheckBox5.Checked:=FALSE;
+  CheckBox6.Checked:=FALSE;
+  CheckBox7.Checked:=FALSE;
 end;
 
 

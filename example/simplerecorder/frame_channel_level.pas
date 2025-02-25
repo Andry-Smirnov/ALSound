@@ -1,7 +1,6 @@
 unit frame_channel_level;
 
-{$mode ObjFPC}
-{$H+}
+{$mode ObjFPC}{$H+}
 
 interface
 
@@ -44,25 +43,24 @@ procedure TFrameChannelsLevel.CheckBox1Change(Sender: TObject);
 begin
   // Update the progress bars.
   if CheckBox1.Checked then
-    begin
-      // In decibel.
-      ProgressBar1.Min:=ALS_DECIBEL_MIN_VALUE;
-      ProgressBar1.Max := 0;
-      ProgressBar2.Min:=ALS_DECIBEL_MIN_VALUE;
-      ProgressBar2.Max := 0;
-      FCurrentLeftLevel := ALS_DECIBEL_MIN_VALUE;
-      FCurrentRightLevel := ALS_DECIBEL_MIN_VALUE;
-    end
-  else
-    begin
-      // In percent.
-      ProgressBar1.Min:=0;
-      ProgressBar1.Max:=100;
-      ProgressBar2.Min:=0;
-      ProgressBar2.Max:=100;
-      FCurrentLeftLevel := 0;
-      FCurrentRightLevel := 0;
-    end;
+  begin
+    // In decibel.
+    ProgressBar1.Min:=ALS_DECIBEL_MIN_VALUE;
+    ProgressBar1.Max:=0;
+    ProgressBar2.Min:=ALS_DECIBEL_MIN_VALUE;
+    ProgressBar2.Max:=0;
+    FCurrentLeftLevel := ALS_DECIBEL_MIN_VALUE;
+    FCurrentRightLevel := ALS_DECIBEL_MIN_VALUE;
+  end
+  else begin
+    // In percent.
+    ProgressBar1.Min:=0;
+    ProgressBar1.Max:=100;
+    ProgressBar2.Min:=0;
+    ProgressBar2.Max:=100;
+    FCurrentLeftLevel := 0;
+    FCurrentRightLevel := 0;
+  end;
 end;
 
 procedure TFrameChannelsLevel.Timer1Timer(Sender: TObject);
@@ -89,7 +87,7 @@ var
 
   procedure MarkAsClipped(aLabel: TLabel);
   begin
-    aLabel.Color := RGBToColor(251, 141, 136);
+    aLabel.Color := RGBToColor(251,141,136);
     aLabel.Tag := 6;
   end;
 

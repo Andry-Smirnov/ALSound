@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, StdCtrls,
-  ExtCtrls,
-  ComCtrls,
+  ExtCtrls, ComCtrls,
   ALSound,
   frame_channel_level;
 
@@ -32,6 +30,7 @@ type
     OD1: TOpenDialog;
     Panel1: TPanel;
     Panel2: TPanel;
+    ProgressBar1: TProgressBar;
     SpeedButton1: TSpeedButton;
     TrackBar1: TTrackBar;
     TrackBar2: TTrackBar;
@@ -40,6 +39,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure ProgressBar1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure SpeedButton1Click(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
@@ -69,7 +70,8 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   // load OpenAL-Soft and LibSndFile libraries
   ALSManager.LoadLibraries;
-
+  // Volume trackbar better match human hearing
+  ALSManager.VolumeMode := ALS_VOLUME_MODE_SQUARED;
   // Create a playback context with the default playback device and default attributes.
   FPlaybackContext := ALSManager.CreateDefaultPlaybackContext;
 
@@ -96,33 +98,47 @@ begin
     ShowMessage(FPlaybackContext.StrError);
 end;
 
+procedure TForm1.ProgressBar1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if FSound = NIL then exit;
+  FSound.TimePosition := x / ProgressBar1.ClientWidth * FSound.TotalDuration;
+end;
+
 procedure TForm1.SpeedButton1Click(Sender: TObject);
 begin
   // Reposition tone cursor to middle (normal).
-  if FSound <> nil then
+  if FSound <> NIL then
     TrackBar2.Position := TrackBar1.Max div 2;
 end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
   // User change sound's volume.
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.Volume.Value := TrackBar1.Position/TrackBar1.Max;
 end;
 
 procedure TForm1.TrackBar2Change(Sender: TObject);
 begin
   // User change sound's tone.
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.Tone.Value := TrackBar2.Position/TrackBar2.Max;
 end;
 
 procedure TForm1.ProcessOnIdle(Sender: TObject; var Done: Boolean);
 begin
-  if FSound <> nil then
+  if FSound <> NIL then
   begin
-    FrameChannelsLevel1.UpdateProgressBar(FSound.ChannelsLevel[0],
-                                          FSound.ChannelsLevel[1]);
+    if FrameChannelsLevel1.CheckBox1.Checked then
+      FrameChannelsLevel1.UpdateProgressBar(FSound.ChannelsLeveldB[0], FSound.ChannelsLeveldB[1])
+    else FrameChannelsLevel1.UpdateProgressBar(FSound.ChannelsLevel[0], FSound.ChannelsLevel[1]);
+
+    if FSound.TotalDuration > 0 then
+      ProgressBar1.Position := Round(FSound.TimePosition / FSound.TotalDuration * ProgressBar1.Max)
+    else
+      ProgressBar1.Position := 0;
+
     Done := False;
   end;
 end;
@@ -131,13 +147,12 @@ procedure TForm1.BLoadClick(Sender: TObject);
 var
   s: string;
 begin
-  if not OD1.Execute then
-    Exit;
+  if not OD1.Execute then exit;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 
   // Free the previous (if any)
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
   // Creates the new one as stream and enable sound monitoring to retrieve the
@@ -157,6 +172,7 @@ begin
     s := s+' channel';
   s := s+'  -  '+ FSound.SampleRate.ToString+'Hz  -  duration '+
        FormatFloat('0.00', FSound.TotalDuration) + 's';
+  s := s+'  -  '+ FSound.SampleCount.ToString;
   Label17.Caption := s;
 
   // Sets loop mode
@@ -165,8 +181,7 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then Exit;
 
   if Sender = BPlay then
     FSound.Play(True);

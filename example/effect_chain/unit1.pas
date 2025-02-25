@@ -1,14 +1,12 @@
 unit Unit1;
 
-{$mode ObjFPC}
-{$H+}
+{$mode objfpc}{$H+}
 
 interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Buttons, StdCtrls,
-  ExtCtrls,
-  ComCtrls,
+  ExtCtrls, ComCtrls,
   ALSound;
 
 type
@@ -150,8 +148,7 @@ end;
 
 procedure TForm1.TrackBar1Change(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then Exit;
 
   // User moves trackbar WET or DRY gain
 
@@ -167,13 +164,12 @@ var
   s: string;
 begin
   // User selects a sound filename to load
-  if not OD1.Execute then
-    Exit;
+  if not OD1.Execute then exit;
 
   Label11.Caption := ExtractFileName( OD1.FileName );
 
   // Free the old one
-  if FSound <> nil then
+  if FSound <> NIL then
     FSound.Kill;    // we can also do FPlaybackContext.Delete( FSound );
 
   // Creates the new one as stream
@@ -203,8 +199,7 @@ end;
 
 procedure TForm1.BPlayClick(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then Exit;
 
   // User have clicked on Play/Pause/Stop button
 
@@ -220,8 +215,7 @@ end;
 
 procedure TForm1.CheckBox1Change(Sender: TObject);
 begin
-  if FSound = nil then
-    Exit;
+  if FSound = NIL then Exit;
 
   // Mute the appropriate effect
 
