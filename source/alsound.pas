@@ -16,7 +16,7 @@
   ALSound offer a simple and easy way to play, capture and mix sounds
   using OpenAL-Soft and LibSndFile libraries under FreePascal/Lazarus.
 
- written by Lulu - 2022 - https://github.com/Lulu04/ALSound
+ written by Lulu - 2022/2026 - https://github.com/Lulu04/ALSound
 }
 
 unit ALSound;
@@ -33,10 +33,11 @@ uses
                                                   // and to render velocity curve on TImage
   openalsoft,
   libsndfile,
-  als_dsp_utils;
+  als_dsp_utils,
+  IT2play;
 
 const
-  ALS_VERSION = '3.0.3';
+  ALS_VERSION = '3.3';
 
 
 type
@@ -381,8 +382,8 @@ type
   protected
     FFadeOutEnabled, FKillAfterFadeOut, FPauseAfterFadeOut, FKillAfterPlay, FKill: boolean;
   private
-    function GetLoop: boolean;
-    procedure SetLoop(AValue: boolean);
+    function GetLoop: boolean; virtual;
+    procedure SetLoop(AValue: boolean); virtual;
     procedure SetALVolume;
     procedure SetALPan;
     procedure SetALPitch;
@@ -663,6 +664,42 @@ type
   end;
 
 
+  { TALSModuleMusic }
+
+  TALSModuleMusic = class(TALSSound)
+  private
+  const
+    NUM_BUFFERS = 8;
+    BUFFER_SIZE = 1024;  // 1024 frames stereo int16, 4096 bytes
+  private
+    FPlayedBufferIndex: integer;
+    function GetChannelLevel(index: integer): single; override;
+  private
+    FModule: TITModule;
+    function DoReadFromModule(aDest: Pointer; aFrameCount: longword): int64;
+  private
+    FBufferFrameCount: integer;
+    procedure PreBuffAudio;
+  private
+    FFrameReadAccu: sf_count_t;
+    FUsedBuffer: ALsizei;
+    procedure Update(const aElapsedTime: single); override;
+    procedure InternalRewind; override;
+    function GetTimePosition: single; override;
+    procedure SetTimePosition(AValue: single); override;
+    function GetLoop: boolean; override;
+    procedure SetLoop(AValue: boolean); override;
+  public
+    constructor CreateFromFile(aParent: TALSPlaybackContext;
+                               const aModuleFilename: string;
+                               aEnableMonitor: boolean;
+                               aOnCustomDSP: TALSOnCustomDSP;
+                               aCustomDSPUserData: Pointer);
+    destructor Destroy; override;
+  end;
+
+
+
   { TALSPlaybackCapturedSound }
 
   TALSPlaybackCapturedSound = class(TALSSound)
@@ -672,7 +709,7 @@ type
   private
     FTempBufID: array[0..NUM_BUFFERS-1] of ALuint;
     procedure SetTimePosition(AValue: single); override;
-  public
+ public
     constructor CreateFromCapture(aParent: TALSPlaybackContext;
                                   aSampleRate: integer;
                                   aBuffer: PALSCaptureFrameBuffer);
@@ -885,6 +922,7 @@ type
                       aOnCustomDSP: TALSOnCustomDSP=NIL;
                       aCustomDSPUserData: Pointer=NIL): TALSSound;
     // Opens the sound file as stream and return its instance.
+    // The file can be a music module .it or .s3m or any supported format by LibSndFile.
     // Set aEnableMonitoring to True if you need the channel's level of the
     // sound (it take some ram and cpu resources).
     function AddStream(const aFilename: string;
@@ -3889,6 +3927,7 @@ begin
 
   EnterCS;
   try
+    if FKill then exit;
     // Get the number of processed buffer
     alGetSourceiv(FSource, AL_BUFFERS_PROCESSED, @processed);
     if processed < 1 then
@@ -4094,6 +4133,288 @@ begin
     LeaveCS;
     UnlockContext;
   end;
+end;
+
+{ TALSModuleMusic }
+
+function TALSModuleMusic.GetChannelLevel(index: integer): single;
+begin
+  Result:=inherited GetChannelLevel(index);
+end;
+
+function TALSModuleMusic.DoReadFromModule(aDest: Pointer; aFrameCount: longword): int64;
+var buf: TALSPlaybackBuffer;
+  pS: PSingle;
+  pInt: PInt16;
+  c: LongWord;
+begin
+  Result := aFrameCount;
+  if not FParentContext.FUseBufferOfFloat then
+    FModule.FillAudioBuffer(PInt16(aDest), aFrameCount)
+  else begin
+    // read int16 and convert to float
+    buf.Init(2, ALS_SAMPLE_INT16);
+    buf.FrameCapacity := aFrameCount;
+    if not buf.OutOfMemory then begin
+      FModule.FillAudioBuffer(PInt16(buf.Data), aFrameCount);
+      pS := PSingle(aDest);
+      pInt := PInt16(buf.Data);
+      c := aFrameCount * 2;
+      while c > 0 do begin
+        pS^ := pInt^ / 32768.0;
+        inc(pS);
+        inc(pInt);
+        dec(c);
+      end;
+    end;
+  end;
+end;
+
+procedure TALSModuleMusic.PreBuffAudio;
+var
+  i: integer;
+  todo: sf_count_t;
+begin
+  alGetError();
+
+  FUsedBuffer := 0;
+  FPlayedBufferIndex := 0;
+  for i := 0 to NUM_BUFFERS - 1 do
+  begin
+    FBuffers[i].FrameCount := 0;
+    todo := FBuffers[i].FrameCapacity;
+    DoReadFromModule(FBuffers[i].DataOffset[FBuffers[i].FrameCount], todo);
+    FBuffers[i].FrameCount := todo;
+
+    if FOnCustomDSP <> NIL then
+      FOnCustomDSP(Self, FBuffers[i], FOnCustomDSPUserData);
+
+    // refill AL buffer with audio
+    alBufferData(FBuffers[i].BufferID, FFormatForAL, FBuffers[i].Data,
+      FBuffers[i].FrameCount*FBuffers[i].BytePerFrame, ALsizei(FSampleRate));
+
+    // retrieve the channels level
+    if FMonitoringEnabled then
+      FBuffers[i].ComputeChannelsLevel;
+
+    Inc(FUsedBuffer);
+  end;
+
+  CheckALError(als_ErrorWhileBufferingData);
+
+  if not Error then
+  begin
+    // Now queue the used buffers
+    for i:=0 to FUsedBuffer - 1 do
+    begin
+      alSourceQueueBuffers(FSource, 1, @FBuffers[i].BufferID);
+      CheckALError(als_ErrorWhileQueuingBuffer);
+      FBuffers[i].Queued := True;
+    end;
+  end;
+end;
+
+procedure TALSModuleMusic.Update(const aElapsedTime: single);
+var
+  processed: ALint;
+  bufid: ALuint;
+  readCount: sf_count_t;
+  bufferIndex: integer;
+  res: ALenum;
+begin
+  inherited Update(aElapsedTime);
+
+  if Error then
+    exit;
+
+  EnterCS;
+  try
+    if FKill then exit;
+    // Get the number of processed buffer
+    alGetSourceiv(FSource, AL_BUFFERS_PROCESSED, @processed);
+    if processed < 1 then
+      exit;
+
+    // Unqueue and fill each processed buffer
+    while (processed > 0) do
+    begin
+      alSourceUnqueueBuffers(FSource, 1, @bufid);
+      Dec(processed);
+      res := alGetError();
+      if res <> AL_NO_ERROR then continue;
+
+      // increment the index of the played buffer. we use this index to retrieve
+      // the channel's level.
+      inc(FPlayedBufferIndex);
+      if FPlayedBufferIndex >= FUsedBuffer then
+        FPlayedBufferIndex := 0;
+
+      // retrieves the index of the buffer to refill with audio
+      bufferIndex := 0;
+      while FBuffers[bufferIndex].BufferID <> bufid do
+       inc(bufferIndex);
+
+      // Read data from opened file
+      readCount := DoReadFromModule(FBuffers[bufferIndex].Data,
+                                    FBufferFrameCount);
+      FBuffers[bufferIndex].FrameCount := readCount;
+
+      if readCount > 0 then
+      begin
+        FFrameReadAccu := FFrameReadAccu + readCount;
+        // callback custom DSP
+        if FOnCustomDSP <> NIL then
+          FOnCustomDSP(Self, FBuffers[bufferIndex], FOnCustomDSPUserData);
+        // refill the openAL buffer with...
+        alBufferData(bufid, ALenum(FFormatForAL), FBuffers[bufferIndex].Data,
+                     ALsizei(readCount * FFrameSize), ALsizei(FSampleRate));
+        // and queue it back on the source
+        alSourceQueueBuffers(FSource, 1, @bufid);
+
+        // retrieve the channels level
+        if FMonitoringEnabled then
+          FBuffers[bufferIndex].ComputeChannelsLevel;
+      end;
+    end;
+  finally
+    LeaveCS;
+  end;
+end;
+
+procedure TALSModuleMusic.InternalRewind;
+begin
+  if Error then
+    exit;
+
+  alSourceRewind(FSource);
+  alSourcei(FSource, AL_BUFFER, 0);
+  FModule.Stop;
+  FModule.Play;
+
+  FFrameReadAccu := 0;
+  PreBuffAudio;
+end;
+
+function TALSModuleMusic.GetTimePosition: single;
+begin
+  Result := 0.0;
+end;
+
+procedure TALSModuleMusic.SetTimePosition(AValue: single);
+begin
+  AValue := AValue;
+end;
+
+function TALSModuleMusic.GetLoop: boolean;
+begin
+  Result := True;
+end;
+
+procedure TALSModuleMusic.SetLoop(AValue: boolean);
+begin
+  AValue := AValue;
+end;
+
+constructor TALSModuleMusic.CreateFromFile(aParent: TALSPlaybackContext;
+  const aModuleFilename: string; aEnableMonitor: boolean;
+  aOnCustomDSP: TALSOnCustomDSP; aCustomDSPUserData: Pointer);
+var
+  fileopened: boolean;
+begin
+  FParentContext := aParent;
+  InitializeErrorStatus;
+  FChannelCount := 1;
+  fileopened := False;
+  FFilename := aModuleFilename;
+  FMonitoringEnabled := aEnableMonitor;
+  FOnCustomDSP := aOnCustomDSP;
+  FOnCustomDSPUserData := aCustomDSPUserData;
+  FLoopDescriptor.InitDefault;
+
+  FModule := NIL;
+  if not Error then begin
+    FModule := TITModule.Create;
+    FModule.Init(DRIVER_DEFAULT, aParent.ObtainedSampleRate);
+    if not FModule.LoadFromFile(aModuleFilename) then begin
+      FModule.Free;
+      FModule := NIL;
+      SetError(als_FileNotOpened);
+    end
+    else fileopened := True;
+  end;
+
+  if not Error then begin
+     FSampleRate := aParent.ObtainedSampleRate;
+     FChannelCount := 2;
+     FFrameCount := BUFFER_SIZE; // 1024 frames
+     FLoopDescriptor.LoopBeginFrame := 0;
+     FLoopDescriptor.LoopEndFrame := 0;
+
+     FFormatForAL := GetFormatForAL(2, FParentContext.FUseBufferOfFloat, False);
+
+     if FParentContext.FUseBufferOfFloat then
+       FFrameSize := SizeOf(Single) * FChannelCount
+     else
+       FFrameSize := SizeOf(Word) * FChannelCount;
+
+     FByteCount := FFrameCount * FFrameSize;
+  end;
+
+  LockContext( FParentContext.FContext );
+  try
+    if not Error then
+    begin
+      // generates the buffers and source
+      GenerateALBuffers(NUM_BUFFERS);
+      GenerateALSource;
+    end;
+
+    if not Error then
+    begin
+      FBufferFrameCount := BUFFER_SIZE;
+      SetBuffersFrameCapacity( FBufferFrameCount );
+
+      // prebuf some data
+      if not Error then begin
+        FModule.Play;
+        PreBuffAudio;
+      end;
+    end;
+  finally
+    UnlockContext;
+  end;
+
+  if Error and fileopened then
+  begin
+    FModule.Free;
+    FModule := NIL;
+  end;
+
+  CreateParameters;
+end;
+
+destructor TALSModuleMusic.Destroy;
+begin
+  if not FParentContext.Error then
+    LockContext( FParentContext.FContext );
+  try
+    if not Error then
+    begin
+      alSourceStop( FSource );
+      RemoveAllALEffects;
+      FDirectFilter.DeleteFilter;
+      alSourcei(FSource, AL_BUFFER, 0);
+      FreeBuffers;
+      alDeleteSources(1, @FSource);
+      FModule.Stop;
+      FModule.Free;
+    end;
+    FreeParameters;
+  finally
+    if not FParentContext.Error then
+      UnlockContext;
+  end;
+  inherited Destroy;
 end;
 
 { TALSSingleStaticBufferSound }
@@ -4425,12 +4746,18 @@ end;
 
 function TALSPlaybackContext.AddStream(const aFilename: string; aEnableMonitoring: boolean;
   aOnCustomDSP: TALSOnCustomDSP; aCustomDSPUserData: Pointer): TALSSound;
+var ext: string;
 begin
   EnterCriticalSection(FCriticalSection);
   LockContext( FContext );
   try
-    Result := TALSStreamBufferSound.CreateFromFile(Self, aFilename,
-                  aEnableMonitoring, aOnCustomDSP, aCustomDSPUserData);
+    ext := LowerCase(ExtractFileExt(aFilename));
+    if (ext = '.it') or (ext = '.s3m') then
+      Result := TALSModuleMusic.CreateFromFile(Self, aFilename,
+                   aEnableMonitoring, aOnCustomDSP, aCustomDSPUserData)
+    else
+      Result := TALSStreamBufferSound.CreateFromFile(Self, aFilename,
+                   aEnableMonitoring, aOnCustomDSP, aCustomDSPUserData);
     FList.Add(Result);
   finally
     LeaveCriticalSection(FCriticalSection);
@@ -5763,6 +6090,7 @@ begin
 
   EnterCriticalSection(FCriticalSection);
   try
+    if FKill then exit;
     v := Volume.Value;
     Volume.OnElapse(aElapsedTime);
     if v <> Volume.Value then
