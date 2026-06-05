@@ -1885,7 +1885,7 @@ begin
     FThread := TALSThread.Create(@DoUpdate, 2, True);
     FThread.Priority := tpHighest;
   end;
-  inc(FThreadRefCount);
+  Inc(FThreadRefCount);
 end;
 
 procedure TALSCaptureContext.StopThread;
@@ -3943,14 +3943,14 @@ begin
 
       // increment the index of the played buffer. we use this index to retrieve
       // the channel's level.
-      inc(FPlayedBufferIndex);
+      Inc(FPlayedBufferIndex);
       if FPlayedBufferIndex >= FUsedBuffer then
         FPlayedBufferIndex := 0;
 
       // retrieves the index of the buffer to refill with audio
       bufferIndex := 0;
       while FBuffers[bufferIndex].BufferID <> bufid do
-       inc(bufferIndex);
+        Inc(bufferIndex);
 
       // Read data from opened file
       readCount := FDoReadFromStream(FBuffers[bufferIndex].Data,
@@ -4162,9 +4162,9 @@ begin
       c := aFrameCount * 2;
       while c > 0 do begin
         pS^ := pInt^ / 32768.0;
-        inc(pS);
-        inc(pInt);
-        dec(c);
+        Inc(pS);
+        Inc(pInt);
+        Dec(c);
       end;
     end;
   end;
@@ -4252,7 +4252,7 @@ begin
       // retrieves the index of the buffer to refill with audio
       bufferIndex := 0;
       while FBuffers[bufferIndex].BufferID <> bufid do
-       inc(bufferIndex);
+        Inc(bufferIndex);
 
       // Read data from opened file
       readCount := DoReadFromModule(FBuffers[bufferIndex].Data,
@@ -4449,7 +4449,7 @@ begin
                       c, aBuf.ChannelCount, @FLevels[i][0]);
 
     frameIndex := frameIndex+frameToRead;
-    inc(i);
+    Inc(i);
   end;
 end;
 
